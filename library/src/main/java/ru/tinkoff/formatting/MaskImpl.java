@@ -270,50 +270,6 @@ public class MaskImpl implements Mask {
         return insertAt(0, input, true);
     }
 
-    @Override
-    public int removeBackwards(int position, int count) {
-
-        // go back fom position and remove any non-hardcoded characters
-        for (int i = 0; i < count; i++) {
-            if (checkIsIndex(position)) {
-                final Slot s = getSlot(position);
-                if (s != null && !s.hardcoded()) {
-                    s.setValue(null);
-                }
-            }
-
-
-            position--;
-        }
-
-        trimTail();
-
-        int cursorPosition = position;
-
-        // We could remove a symbol before a sequence of hardcoded characters
-        // that are now tail. It this case our cursor index will point at non printable
-        // character. To avoid this find next not-hardcoded symbol to the left
-        Slot slot = getSlot(cursorPosition);
-        while (slot != null && slot.hardcoded() && cursorPosition > 0) {
-            slot = getSlot(--cursorPosition);
-            if (slot != null) {
-                showHardcodedTail = !slot.anyInputToTheRight();
-            }
-        }
-
-
-        // check if we've reached begin of the string
-        // this can happen not only because we've been 'deleting' hardcoded characters
-        // at he begin of the string.
-        showHardcodedTail &= cursorPosition <= 0 && !hideHardcodedHead;
-        if (showHardcodedTail) {
-            cursorPosition = position;
-        }
-
-        cursorPosition++;
-
-        return (cursorPosition >= 0 && cursorPosition <= size) ? cursorPosition : 0;
-    }
 
     @Override
     public int getSize() {
@@ -328,6 +284,65 @@ public class MaskImpl implements Mask {
     @Override
     public void setShowingEmptySlots(boolean showingEmptySlots) {
         this.showingEmptySlots = showingEmptySlots;
+    }
+
+    /**
+     * Removes available symbols from the buffer. This method should be called on deletion event of
+     * user's input. Symbols are deleting backwards (just as backspace key). Hardcoded symbols
+     * would
+     * not be deleted, only cursor will be moved over them.
+     * <p>
+     * Method also updates {@code showHardcodedTail} flag that defines whether tail of hardcoded
+     * symbols (at the end of user's input) should be shown. In most cases it should not. The only
+     * case when they are visible - buffer starts with them and deletion was inside them.
+     *
+     * @param position from where to start deletion
+     * @param count    number of  symbols to delete.
+     * @return new cursor position after deletion
+     */
+    @Override
+    public int removeBackwards(int position, int count) {
+        // go back fom position and remove any non-hardcoded characters
+        for (int i = 0; i < count; i++) {
+            if (checkIsIndex(position)) {
+                final Slot s = getSlot(position);
+                if (s != null && !s.hardcoded()) {
+                    s.setValue(null);
+                }
+            }
+
+            position--;
+        }
+
+        trimTail();
+
+        int cursorPosition = position;
+
+        Slot slot = getSlot(cursorPosition);
+        // all the following code will only occur if we're not trying to remove "hardcoded head"
+        if (slot != null && (slot.anyInputToTheLeft() || !slot.anyInputToTheRight())) {
+            // We could remove a symbol before a sequence of hardcoded characters
+            // that are now tail. It this case our cursor index will point at non printable
+            // character. To avoid this find next not-hardcoded symbol to the left
+            while (slot != null && slot.hardcoded() && cursorPosition > 0) {
+                slot = getSlot(--cursorPosition);
+                if (slot != null) {
+                    showHardcodedTail = !slot.anyInputToTheRight();
+                }
+            }
+
+            // check if we've reached begin of the string
+            // this can happen not only because we've been 'deleting' hardcoded characters
+            // at he begin of the string.
+            showHardcodedTail &= cursorPosition <= 0 && !hideHardcodedHead;
+            if (showHardcodedTail) {
+                cursorPosition = position;
+            }
+        }
+
+        cursorPosition++;
+
+        return (0 <= cursorPosition && cursorPosition <= size) ? cursorPosition : 0;
     }
 
     @NonNull

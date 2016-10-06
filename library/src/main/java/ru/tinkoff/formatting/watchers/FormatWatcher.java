@@ -284,7 +284,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     }
 
     private void setSelection(int position) {
-        if (textView instanceof EditText) {
+        if (textView instanceof EditText && position <= textView.length()) {
             ((EditText) textView).setSelection(position);
         }
     }

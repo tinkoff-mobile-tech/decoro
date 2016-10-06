@@ -1,0 +1,8 @@
+<resources>
+    <string name="hint_data">Введите что-нибудь</string>
+
+    <string name="hint_mask">Маска</string>
+    <string name="choose_mask">Выберите маску&#8230;</string>
+    <string name="static_mask_button">Готовая маска</string>
+    <string name="custom_mask_button">Произвольная маска</string>
+</resources>

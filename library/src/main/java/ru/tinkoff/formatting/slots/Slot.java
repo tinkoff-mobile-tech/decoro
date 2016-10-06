@@ -94,6 +94,18 @@ public class Slot implements Serializable, Parcelable {
         return false;
     }
 
+    public boolean anyInputToTheLeft() {
+        if (value != null && !hardcoded()) {
+            return true;
+        }
+
+        if (prevSlot != null) {
+            return prevSlot.anyInputToTheLeft();
+        }
+
+        return false;
+    }
+
     public int setValue(@Nullable Character newValue) {
         return setValue(newValue, false);
     }

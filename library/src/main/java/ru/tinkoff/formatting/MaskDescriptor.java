@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -19,6 +21,10 @@ public class MaskDescriptor implements Serializable, Parcelable {
 
     @NonNull
     public static MaskDescriptor ofRawMask(@Nullable final String rawMask) {
+        if (TextUtils.isEmpty(rawMask)){
+            return emptyMask();
+        }
+
         return new MaskDescriptor()
                 .withRawMask(rawMask);
     }

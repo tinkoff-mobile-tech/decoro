@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">FormattingDemo</string>
+    <string name="app_name" translatable="false">Formatting demo</string>
+
+    <string name="hint_data">Input something</string>
+    <string name="hint_mask">Mask</string>
+    <string name="choose_mask">Choose mask&#8230;</string>
+    <string name="static_mask_button">Static mask</string>
+    <string name="custom_mask_button">Custom mask</string>
 </resources>
