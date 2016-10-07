@@ -3,7 +3,12 @@
 
     <string name="hint_data">Input something</string>
     <string name="hint_mask">Mask</string>
-    <string name="choose_mask">Choose mask&#8230;</string>
+    <string name="choose_mask">Choose mask</string>
     <string name="static_mask_button">Static mask</string>
     <string name="custom_mask_button">Custom mask</string>
+    <string name="mask_card">Card number (Visa, MasterCard)</string>
+    <string name="mask_card_maestro">Card number (Maestro)</string>
+    <string name="mask_passport">Russian passport</string>
+    <string name="mask_phone">Russian phone</string>
+    <string name="mask_preview">Mask: %s</string>
 </resources>

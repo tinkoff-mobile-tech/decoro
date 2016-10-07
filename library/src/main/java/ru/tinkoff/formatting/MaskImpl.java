@@ -22,8 +22,6 @@ public class MaskImpl implements Mask {
         return new MaskImpl(slots, false);
     }
 
-    private static final char PLACEHOLDER_DEFAULT = '_';
-
     private static final int TAG_EXTENSION = -149635;
 
     // Members available outside the Mask
@@ -289,8 +287,7 @@ public class MaskImpl implements Mask {
     /**
      * Removes available symbols from the buffer. This method should be called on deletion event of
      * user's input. Symbols are deleting backwards (just as backspace key). Hardcoded symbols
-     * would
-     * not be deleted, only cursor will be moved over them.
+     * would not be deleted, only cursor will be moved over them.
      * <p>
      * Method also updates {@code showHardcodedTail} flag that defines whether tail of hardcoded
      * symbols (at the end of user's input) should be shown. In most cases it should not. The only
@@ -348,7 +345,7 @@ public class MaskImpl implements Mask {
     @NonNull
     @Override
     public Character getPlaceholder() {
-        return placeholder != null ? placeholder : PLACEHOLDER_DEFAULT;
+        return placeholder != null ? placeholder : Slot.PLACEHOLDER_DEFAULT;
     }
 
     @Override

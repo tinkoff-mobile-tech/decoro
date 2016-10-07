@@ -43,6 +43,8 @@ public class Slot implements Serializable, Parcelable {
      */
     public static final int TAG_DECORATION = 14779;
 
+    public static final char PLACEHOLDER_DEFAULT = '_';
+
     private int rulesFlags = RULES_DEFAULT;
 
     private Character value;

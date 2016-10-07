@@ -269,4 +269,29 @@ public class MaskDescriptor implements Serializable, Parcelable {
         result = 31 * result + (emptySlotPlaceholder != null ? emptySlotPlaceholder.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        if (!TextUtils.isEmpty(rawMask)) {
+            return rawMask;
+        } else if (slots != null && slots.length > 0) {
+            return slotsToString();
+        }
+
+        return "(empty)";
+    }
+
+    private String slotsToString() {
+        final StringBuilder result = new StringBuilder(slots.length);
+        for (Slot slot : slots) {
+            Character value = slot.getValue();
+            if (value == null) {
+                value = emptySlotPlaceholder == null ? Slot.PLACEHOLDER_DEFAULT : emptySlotPlaceholder;
+            }
+
+            result.append(value);
+        }
+
+        return result.toString();
+    }
 }

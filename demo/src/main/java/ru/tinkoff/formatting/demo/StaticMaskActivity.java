@@ -22,7 +22,7 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
     private static final String MASK_DIALOG_TAG = "mask-dialog";
 
     private EditText dataEdit;
-    private TextView maskSelectorView;
+    private TextView maskPreviewView;
 
     private FormatWatcherImpl formatWatcher;
 
@@ -36,8 +36,10 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
         formatWatcher = new FormatWatcherImpl(MaskDescriptor.emptyMask().withTermination(false));
         formatWatcher.installOn(dataEdit);
 
-        maskSelectorView = (TextView) findViewById(R.id.textMask);
-        maskSelectorView.setOnClickListener(this);
+        maskPreviewView = (TextView) findViewById(R.id.textMaskPreview);
+        maskPreviewView.setText(getString(R.string.mask_preview, ""));
+
+        findViewById(R.id.buttonMask).setOnClickListener(this);
     }
 
     @Override
@@ -49,6 +51,6 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onMaskSelected(@NonNull MaskDescriptor maskDescriptor, @NonNull String title) {
         formatWatcher.changeMask(maskDescriptor.withInitialValue(dataEdit.getText().toString()));
-        maskSelectorView.setText(title);
+        maskPreviewView.setText(getString(R.string.mask_preview,maskDescriptor.toString()));
     }
 }

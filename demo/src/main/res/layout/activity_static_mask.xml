@@ -6,15 +6,23 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textMask"
+    <Button
+        android:id="@+id/buttonMask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="-128dp"
-        android:textSize="18sp"
-        android:text="@string/choose_mask"
-        android:hint="@string/hint_mask"/>
+        android:hint="@string/hint_mask"
+        android:text="@string/choose_mask"/>
+
+    <TextView
+        android:id="@+id/textMaskPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:padding="4dp"
+        android:text="@string/mask_preview"
+        android:textSize="18sp"/>
 
     <EditText
         android:id="@+id/editData"

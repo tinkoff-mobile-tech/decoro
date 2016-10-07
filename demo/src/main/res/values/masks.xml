@@ -2,10 +2,10 @@
 <resources>
 
     <string-array name="masks">
-        <item>Номер телефона</item>
-        <item>Номер карты (Visa, Mastercard)</item>
-        <item>Номер карты (Maestro)</item>
-        <item>Номер паспорта</item>
+        <item>@string/mask_phone</item>
+        <item>@string/mask_card</item>
+        <item>@string/mask_card_maestro</item>
+        <item>@string/mask_passport</item>
     </string-array>
 
 </resources>
