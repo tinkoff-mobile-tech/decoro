@@ -12,7 +12,7 @@ import ru.tinkoff.formatting.parser.UnderscoreDigitSlotsParser;
 import ru.tinkoff.formatting.watchers.FormatWatcherImpl;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 
 public class CustomMaskActivity extends AppCompatActivity {

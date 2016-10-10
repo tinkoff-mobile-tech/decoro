@@ -12,7 +12,7 @@ import ru.tinkoff.formatting.slots.PredefinedSlots;
 
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 public class MaskSelectorDialog extends DialogFragment implements DialogInterface.OnClickListener {
 

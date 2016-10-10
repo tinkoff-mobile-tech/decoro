@@ -4,7 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 
 class TextWatcherImpl implements TextWatcher {

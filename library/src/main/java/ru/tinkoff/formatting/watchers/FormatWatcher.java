@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2016 Tinkoff Bank
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ru.tinkoff.formatting.watchers;
 
 import android.support.annotation.NonNull;
@@ -15,17 +31,18 @@ import ru.tinkoff.formatting.Mask;
 import ru.tinkoff.formatting.MaskFactory;
 
 /**
- * @author Mikhail Artemyev
- *         <p>
- *         This class encapsutates logic of formatting (pretty printing) content of a TextView. All
- *         the formatting logic is incapsulated inside the {@link Mask} class. This class is only
- *         used to follow TextView changes and format it according to the {@link Mask}. It's okay
- *         to
- *         use it either with {@link TextView} or {@link EditText}. Important note for using with
- *         bare {@link TextView}. Since its content usually changes with {@link TextView#setText},
- *         inserting text should contain all the hardcoded symbols of the {@link Mask}.
- *         <p>
- *         All the children classes should implement their own way of creating {@link Mask}.
+ * <p>
+ * This class encapsutates logic of formatting (pretty printing) content of a TextView. All
+ * the formatting logic is incapsulated inside the {@link Mask} class. This class is only
+ * used to follow TextView changes and format it according to the {@link Mask}. It's okay
+ * to
+ * use it either with {@link TextView} or {@link EditText}. Important note for using with
+ * bare {@link TextView}. Since its content usually changes with {@link TextView#setText},
+ * inserting text should contain all the hardcoded symbols of the {@link Mask}.
+ * <p>
+ * All the children classes should implement their own way of creating {@link Mask}.
+ *
+ * @author Mikhail Artemev
  */
 public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 

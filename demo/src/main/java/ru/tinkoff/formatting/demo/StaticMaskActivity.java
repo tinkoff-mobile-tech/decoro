@@ -13,7 +13,7 @@ import ru.tinkoff.formatting.MaskDescriptor;
 import ru.tinkoff.formatting.watchers.FormatWatcherImpl;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 
 public class StaticMaskActivity extends AppCompatActivity implements View.OnClickListener,

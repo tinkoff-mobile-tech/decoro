@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2016 Tinkoff Bank
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ru.tinkoff.formatting;
 
 import android.support.annotation.NonNull;
@@ -12,7 +28,7 @@ import ru.tinkoff.formatting.slots.Slot;
  * <br/><br/>
  * See: {@link MaskImpl} - the main implementation of this interface.
  *
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 public interface Mask extends Iterable<Slot> {
 
@@ -133,13 +149,13 @@ public interface Mask extends Iterable<Slot> {
 
     /**
      * Sets character that will be put on empty position when calling {@link #toString()} or
-     * {@link #toUnformattedString()}.
+     * {@link #toUnformattedString()}. Placeholder should not be null!
      * <br/><br/>
      * See: {@link #setShowingEmptySlots(boolean)}
      *
      * @param placeholder character that represents empty slots
      */
-    void setPlaceholder(@NonNull Character placeholder);
+    void setPlaceholder(Character placeholder);
 
     /**
      * @return true if mask will hide leading hardcoded sequence of its contents.

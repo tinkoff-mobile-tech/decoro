@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
