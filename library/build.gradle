@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../gradle/publish-lib.gradle'
 
 android {
     compileSdkVersion rootProject.targetSdk
@@ -7,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.targetSdk
-        versionCode 1
-        versionName "1.0"
+        versionCode project.properties['VERSION_CODE'].toInteger()
+        versionName project.properties['VERSION_NAME']
     }
     buildTypes {
         release {

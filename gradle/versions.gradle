@@ -1,0 +1,12 @@
+ext {
+    libVersionCode = 1
+    libVersionName = '1.0.0'
+
+    libMinSdk = 10
+    libTargetSdk = 24
+
+    buildToolsVersion = '24.0.2'
+    supportVersion = '24.2.1'
+    jUnitVersion = '4.12'
+    robolectricVersion = '3.1.2'
+}
