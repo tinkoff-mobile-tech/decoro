@@ -20,7 +20,8 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+//    compile project(':library')
+    compile "ru.tinkoff.decoro:decoro:1.0.0"
 
     compile "com.android.support:appcompat-v7:$rootProject.supportVersion"
 }
