@@ -14,16 +14,15 @@ dependencies {
 }
 ```
 
-# Примеры
+# Использование
 
 ### Одиночное форматирование
 В примерах ниже содержимое строки `text` будет приведено к формату, опреленному _маской_.
 
 ##### Пример 1. Использование заранее опредленной маски
 ```Java
-String text = "9995554433";
 Mask mask = new MaskImpl(PredefinedSlots.RUS_PHONE_NUMBER, true);
-mask.insertFront(text);
+mask.insertFront("9995554433");
 System.out.println(mask.toString()); // +7 (999) 555-44-33
 ```
 
