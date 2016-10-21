@@ -42,7 +42,7 @@ public class SlotTest {
 
     @Test
     public void parcelable() {
-        Slot before = new Slot(Slot.RULE_INPUT_MOVES_CURRENT,
+        Slot before = new Slot(Slot.RULES_DEFAULT,
                 'x',
                 SlotValidatorSet.setOf(new SlotValidators.MaskedDigitValidator()));
 
@@ -68,12 +68,12 @@ public class SlotTest {
     }
 
     @Test
-    public void setValueOffset() {
-        Slot b = new Slot(Slot.RULE_INPUT_MOVES_CURRENT, null, null);
+    public void setValueOffset(){
+        Slot b = new Slot(Slot.RULES_DEFAULT, null, null);
         assertEquals(1, b.setValue(' '));
         assertEquals(1, b.setValue('2'));
 
-        Slot c = new Slot(Slot.RULE_INPUT_MOVES_CURRENT, null, null);
+        Slot c = new Slot(Slot.RULES_DEFAULT, null, null);
         c.setPrevSlot(b);
         b.setNextSlot(c);
 

@@ -50,8 +50,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 
     private CharSequence textBeforeChange;
 
-    private boolean forceHidingHead;
-
     private Mask mask;
     private TextView textView;
     private boolean initWithMask;
@@ -171,11 +169,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         textBeforeChange = new String(s.toString());
 
         diffMeasures.calculateBeforeTextChanged(start, count, after);
-
-        forceHidingHead = !mask.isHideHardcodedHead() && after == 0 && start == 0;
-        if (forceHidingHead) {
-            mask.setHideHardcodedHead(true);
-        }
     }
 
     @Override
@@ -253,11 +246,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         }
 
         textBeforeChange = null;
-
-        if (forceHidingHead) {
-            mask.setHideHardcodedHead(false);
-            forceHidingHead = false;
-        }
     }
 
     public Mask getMask() {
