@@ -147,9 +147,7 @@ public final class PredefinedSlots {
     }
 
     public static Slot maskableDigit() {
-        return new Slot(null,
-                new SlotValidators.DigitValidator(),
-                new SlotValidators.MaskedDigitValidator());
+        return new Slot(null, new SlotValidators.MaskedDigitValidator());
     }
 
     private PredefinedSlots() {
