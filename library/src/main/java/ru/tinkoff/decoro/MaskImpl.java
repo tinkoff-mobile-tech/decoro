@@ -16,6 +16,9 @@
 
 package ru.tinkoff.decoro;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
@@ -27,15 +30,13 @@ import ru.tinkoff.decoro.slots.Slot;
  */
 public class MaskImpl implements Mask {
 
-    public static Mask createTerminated(final Slot[] slots) {
+    public static Mask createTerminated(@NonNull final Slot[] slots) {
         return new MaskImpl(slots, true);
     }
 
-    public static Mask createNonTerminated(final Slot[] slots) {
+    public static Mask createNonTerminated(@NonNull final Slot[] slots) {
         return new MaskImpl(slots, false);
     }
-
-    private static final char PLACEHOLDER_DEFAULT = '_';
 
     private static final int TAG_EXTENSION = -149635;
 
@@ -52,7 +53,7 @@ public class MaskImpl implements Mask {
     private Slot lastSlot;
     private boolean showHardcodedTail = true;
 
-    public MaskImpl(Slot[] slots, boolean terminated) {
+    public MaskImpl(@NonNull Slot[] slots, boolean terminated) {
         this.terminated = terminated;
         this.size = slots.length;
 
@@ -85,6 +86,7 @@ public class MaskImpl implements Mask {
 
     }
 
+    @NonNull
     @Override
     public String toString() {
         return toString(true);
@@ -100,6 +102,7 @@ public class MaskImpl implements Mask {
      *
      * @return content of the mask without characters in a decoration slots.
      */
+    @NonNull
     @Override
     public String toUnformattedString() {
         return toString(false);
@@ -109,47 +112,12 @@ public class MaskImpl implements Mask {
         return firstSlot != null ? toStringFrom(firstSlot, allowDecoration) : "";
     }
 
-    /**
-     * <em>Method is deprecated.</em> Use {@link #toUnformattedString()} instead. It respects
-     * mask parameters. So if you don't need an unformatted string without user input, just set
-     * {@link #showingEmptySlots} to false and {@link #hideHardcodedHead} to true.
-     * <p>
-     * Returns text without decoration characters. Example: assume that filled mask contains "+7
-     * 999
-     * 111-22-33" where "_" are digit slots and spaces and dashes are decoration slots. Then this
-     * method will return "+79991112233".
-     *
-     * @param evenWithoutInput if set to false and there's no user input thne empty string will be
-     *                         returned. This is needed for example when mask starts with hardcoded
-     *                         "+7". In this case method will return "+7" when {@code
-     *                         evenWithoutInput} is true and "" when {@code evenWithoutInput} is
-     *                         false
-     * @return content of the mask without characters in a decoration slots.
-     */
-    @Deprecated
-    public String getUnformattedString(boolean evenWithoutInput) {
-        if (!evenWithoutInput && !hasUserInput()) {
-            return "";
-        }
-
-        final Iterator<Slot> maskIterator = iterator();
-        final StringBuilder result = new StringBuilder(size);
-        while (maskIterator.hasNext()) {
-            Slot s = maskIterator.next();
-            if (!s.hasTag(Slot.TAG_DECORATION) && s.getValue() != null) {
-                result.append(s.getValue());
-            }
-        }
-
-        return result.toString();
-    }
-
     @Override
     public Iterator<Slot> iterator() {
         return new MaskIterator(firstSlot);
     }
 
-    public String toStringFrom(final Slot startSlot, final boolean allowDecoration) {
+    private String toStringFrom(final Slot startSlot, final boolean allowDecoration) {
         final StringBuilder result = new StringBuilder();
 
         // create a string out of slots values
@@ -189,10 +157,6 @@ public class MaskImpl implements Mask {
         return result.toString();
     }
 
-    /**
-     * Looks for initial position for cursor since buffer can be predefined with starting
-     * characters
-     */
     @Override
     public int getInitialInputPosition() {
         int cursorPosition = 0;
@@ -215,11 +179,6 @@ public class MaskImpl implements Mask {
         return firstSlot.anyInputToTheRight();
     }
 
-    /**
-     * Checks whether user filled whole mask.
-     *
-     * @return true if the're no more empty slots
-     */
     @Override
     public boolean filled() {
         return filledFrom(firstSlot);
@@ -263,7 +222,7 @@ public class MaskImpl implements Mask {
      * @return cursor position after insert
      */
     @Override
-    public int insertAt(final int position, final CharSequence input, boolean cursorAfterTrailingHardcoded) {
+    public int insertAt(final int position, @Nullable final CharSequence input, boolean cursorAfterTrailingHardcoded) {
         showHardcodedTail = true;
         if (!checkIsIndex(position) || input == null || input.length() == 0) {
             return position;
@@ -336,7 +295,7 @@ public class MaskImpl implements Mask {
      * @return cursor position after insert
      */
     @Override
-    public int insertAt(final int position, final CharSequence input) {
+    public int insertAt(final int position, @Nullable final CharSequence input) {
         return insertAt(position, input, true);
     }
 
@@ -350,7 +309,7 @@ public class MaskImpl implements Mask {
      * @return cursor position after insert
      */
     @Override
-    public int insertFront(final CharSequence input) {
+    public int insertFront(final @Nullable CharSequence input) {
         return insertAt(0, input, true);
     }
 
@@ -435,22 +394,19 @@ public class MaskImpl implements Mask {
         this.showingEmptySlots = showingEmptySlots;
     }
 
+    @NonNull
     @Override
     public Character getPlaceholder() {
-        return placeholder != null ? placeholder : PLACEHOLDER_DEFAULT;
+        return placeholder != null ? placeholder : Slot.PLACEHOLDER_DEFAULT;
     }
 
     @Override
     public void setPlaceholder(Character placeholder) {
-        this.placeholder = placeholder;
-    }
+        if (placeholder == null) {
+            throw new IllegalArgumentException("Placeholder is null");
+        }
 
-    /**
-     * Use {@link MaskImpl#isHideHardcodedHead()} instead
-     */
-    @Deprecated
-    public boolean shouldHideHardcodedHead() {
-        return isHideHardcodedHead();
+        this.placeholder = placeholder;
     }
 
     @Override
@@ -458,13 +414,6 @@ public class MaskImpl implements Mask {
         return hideHardcodedHead;
     }
 
-    /**
-     * Use {@link MaskImpl#setHideHardcodedHead(boolean)}
-     */
-    @Deprecated
-    public void setShouldHideHardcodedHead(boolean shouldHideHardcodedHead) {
-        setHideHardcodedHead(shouldHideHardcodedHead);
-    }
 
     @Override
     public void setHideHardcodedHead(boolean shouldHideHardcodedHead) {
@@ -513,12 +462,6 @@ public class MaskImpl implements Mask {
 
     }
 
-    /**
-     * Returns slot by its index
-     *
-     * @param index index of a slot
-     * @return null if index is incorrect and slot otherwise
-     */
     private Slot getSlot(int index) {
         if (!checkIsIndex(index)) {
             return null;
@@ -571,12 +514,6 @@ public class MaskImpl implements Mask {
         return result;
     }
 
-    /**
-     * Checks whether @{code position} posits at a slot
-     *
-     * @param position index to check
-     * @return true in position is inside the mask
-     */
     private boolean checkIsIndex(int position) {
         return 0 <= position && position < size;
     }
@@ -604,14 +541,10 @@ public class MaskImpl implements Mask {
      * @param slot     slot ot insert. IMPORTANT: a copy of this slot will be inserted!
      * @return newly inserted slot (copy of the passed one)
      */
-    private Slot insertSlotAt(final int position, final Slot slot) {
+    private Slot insertSlotAt(final int position, @NonNull final Slot slot) {
 
         if (position < 0 || size < position) {
-            throw new IllegalArgumentException("New slot position should be inside the mask. Or on the tail (position = size)");
-        }
-
-        if (slot == null) {
-            throw new IllegalArgumentException("Slot cannot be null");
+            throw new IndexOutOfBoundsException("New slot position should be inside the mask. Or on the tail (position = size)");
         }
 
         final Slot toInsert = new Slot(slot);
@@ -659,14 +592,18 @@ public class MaskImpl implements Mask {
 
         Slot currentSlot = lastSlot;
         Slot prevSlot = currentSlot.getPrevSlot();
-        while (currentSlot.hasTag(TAG_EXTENSION) &&
-                prevSlot.hasTag(TAG_EXTENSION) &&
-                currentSlot.getValue() == null &&
-                prevSlot.getValue() == null) {
+        while (isAllowedToRemoveSlot(currentSlot, prevSlot)) {
             removeSlotAt(size - 1);
             currentSlot = prevSlot;
             prevSlot = prevSlot.getPrevSlot();
         }
+    }
+
+    private boolean isAllowedToRemoveSlot(Slot removalCandidate, Slot previousSlot) {
+        return removalCandidate.hasTag(TAG_EXTENSION) &&
+                previousSlot.hasTag(TAG_EXTENSION) &&
+                removalCandidate.getValue() == null &&
+                previousSlot.getValue() == null;
     }
 
     /**
@@ -689,7 +626,7 @@ public class MaskImpl implements Mask {
         return out;
     }
 
-    public class MaskIterator implements Iterator<Slot> {
+    private static class MaskIterator implements Iterator<Slot> {
 
         Slot nextSlot;
 
