@@ -224,10 +224,11 @@ public class MaskImpl implements Mask {
      */
     @Override
     public int insertAt(final int position, @Nullable final CharSequence input, boolean cursorAfterTrailingHardcoded) {
-        showHardcodedTail = true;
         if (!checkIsIndex(position) || input == null || input.length() == 0) {
             return position;
         }
+
+        showHardcodedTail = true;
 
         int cursorPosition = position;
         Slot slotCandidate = getSlot(position);
