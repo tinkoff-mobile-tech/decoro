@@ -108,6 +108,7 @@ public class MaskImpl implements Mask {
         return toString(false);
     }
 
+    @NonNull
     private String toString(boolean allowDecoration) {
         return firstSlot != null ? toStringFrom(firstSlot, allowDecoration) : "";
     }
