@@ -33,7 +33,7 @@ public class PhoneNumberUnderscoreSlotsParser extends UnderscoreDigitSlotsParser
     @NonNull
     @Override
     public Slot[] parseSlots(@NonNull CharSequence rawMask) {
-        rule = Slot.RULE_INPUT_MOVES_INPUT;
+        rule = Slot.RULE_INPUT_MOVES_INPUT | Slot.RULE_INPUT_REPLACE;
         return super.parseSlots(rawMask);
     }
 
@@ -44,7 +44,7 @@ public class PhoneNumberUnderscoreSlotsParser extends UnderscoreDigitSlotsParser
         }
 
         final Slot slot = new Slot(rule, character, SlotValidatorSet.setOf(new SlotValidators.DigitValidator()));
-        rule |= Slot.RULE_FORBID_LEFT_OVERWRITE;
+        rule = Slot.RULE_INPUT_MOVES_INPUT;
 
         return slot;
     }

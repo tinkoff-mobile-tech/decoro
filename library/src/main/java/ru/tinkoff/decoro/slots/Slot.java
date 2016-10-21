@@ -32,25 +32,24 @@ import java.util.Set;
 public class Slot implements Serializable, Parcelable {
 
     /**
-     * On input slot moves it's current value to the nextSlot
-     * This is default behavior
+     * On input current value of a slot will be replaced.
+     * Other slots won't be affected.
+     * This is the same as text input on a keyboard with INSERT mode on.
      */
-    public static final int RULE_INPUT_MOVES_CURRENT = 1;
+    public static final int RULE_INPUT_REPLACE = 1;
 
     /**
-     * On input slot moves new value to the next slot keeping current value
+     * On input slot moves new value to the next slot keeping current value.
+     * This rule makes slot 'non-modifiable' (hardcoded)
      */
     public static final int RULE_INPUT_MOVES_INPUT = 1 << 1;
 
     /**
-     * This flag makes sense only in disjunction with RULE_INPUT_MOVES_INPUT.
-     * It makes "hardcoded" slot to overwrite it's value with the same character only when
-     * value not come from the neighbour slot.
+     * On input slot moves it's current value to the nextSlot
      */
-    public static final int RULE_FORBID_LEFT_OVERWRITE = 1 << 2;
+    public static final int RULES_DEFAULT = 0;
 
-    public static final int RULES_DEFAULT = RULE_INPUT_MOVES_CURRENT;
-    public static final int RULES_HARDCODED = RULE_INPUT_MOVES_INPUT;
+    public static final int RULES_HARDCODED = RULE_INPUT_MOVES_INPUT | RULE_INPUT_REPLACE;
 
     /**
      * Tag that marks a slot as a "decoration" slot. This kind of slots are only needed for
@@ -185,7 +184,10 @@ public class Slot implements Serializable, Parcelable {
     private int setNewValue(int offset, @NonNull Character newValue, boolean fromLeft) {
         boolean changeCurrent = true;
 
-        final boolean forbiddenInputFromLeft = fromLeft && checkRule(RULE_FORBID_LEFT_OVERWRITE);
+        final boolean forbiddenInputFromLeft = fromLeft
+                && checkRule(RULE_INPUT_MOVES_INPUT)
+                && !checkRule(RULE_INPUT_REPLACE);
+
         if (hardcoded() && !forbiddenInputFromLeft && value.equals(newValue)) {
             return ++offset;
         }
@@ -198,7 +200,7 @@ public class Slot implements Serializable, Parcelable {
             changeCurrent = false;
         }
 
-        if (value != null && checkRule(RULE_INPUT_MOVES_CURRENT)) {
+        if (value != null && rulesFlags == RULES_DEFAULT) {
             // we should push current value further without
             pushValueToSlot(0, value, nextSlot);
         }

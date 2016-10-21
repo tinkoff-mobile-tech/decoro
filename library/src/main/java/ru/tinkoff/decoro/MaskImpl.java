@@ -16,9 +16,6 @@
 
 package ru.tinkoff.decoro;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
@@ -30,13 +27,15 @@ import ru.tinkoff.decoro.slots.Slot;
  */
 public class MaskImpl implements Mask {
 
-    public static Mask createTerminated(@NonNull final Slot[] slots) {
+    public static Mask createTerminated(final Slot[] slots) {
         return new MaskImpl(slots, true);
     }
 
-    public static Mask createNonTerminated(@NonNull final Slot[] slots) {
+    public static Mask createNonTerminated(final Slot[] slots) {
         return new MaskImpl(slots, false);
     }
+
+    private static final char PLACEHOLDER_DEFAULT = '_';
 
     private static final int TAG_EXTENSION = -149635;
 
@@ -53,7 +52,7 @@ public class MaskImpl implements Mask {
     private Slot lastSlot;
     private boolean showHardcodedTail = true;
 
-    public MaskImpl(@NonNull Slot[] slots, boolean terminated) {
+    public MaskImpl(Slot[] slots, boolean terminated) {
         this.terminated = terminated;
         this.size = slots.length;
 
@@ -101,22 +100,48 @@ public class MaskImpl implements Mask {
      *
      * @return content of the mask without characters in a decoration slots.
      */
-    @NonNull
     @Override
     public String toUnformattedString() {
         return toString(false);
     }
 
-    @NonNull
     private String toString(boolean allowDecoration) {
-        Slot initialSlot = firstSlot;
-        if (!showingEmptySlots && hideHardcodedHead && !initialSlot.anyInputToTheRight()) {
-            while (initialSlot != null && initialSlot.hardcoded()) {
-                initialSlot = initialSlot.getNextSlot();
+        return firstSlot != null ? toStringFrom(firstSlot, allowDecoration) : "";
+    }
+
+    /**
+     * <em>Method is deprecated.</em> Use {@link #toUnformattedString()} instead. It respects
+     * mask parameters. So if you don't need an unformatted string without user input, just set
+     * {@link #showingEmptySlots} to false and {@link #hideHardcodedHead} to true.
+     * <p>
+     * Returns text without decoration characters. Example: assume that filled mask contains "+7
+     * 999
+     * 111-22-33" where "_" are digit slots and spaces and dashes are decoration slots. Then this
+     * method will return "+79991112233".
+     *
+     * @param evenWithoutInput if set to false and there's no user input thne empty string will be
+     *                         returned. This is needed for example when mask starts with hardcoded
+     *                         "+7". In this case method will return "+7" when {@code
+     *                         evenWithoutInput} is true and "" when {@code evenWithoutInput} is
+     *                         false
+     * @return content of the mask without characters in a decoration slots.
+     */
+    @Deprecated
+    public String getUnformattedString(boolean evenWithoutInput) {
+        if (!evenWithoutInput && !hasUserInput()) {
+            return "";
+        }
+
+        final Iterator<Slot> maskIterator = iterator();
+        final StringBuilder result = new StringBuilder(size);
+        while (maskIterator.hasNext()) {
+            Slot s = maskIterator.next();
+            if (!s.hasTag(Slot.TAG_DECORATION) && s.getValue() != null) {
+                result.append(s.getValue());
             }
         }
 
-        return initialSlot != null ? toStringFrom(initialSlot, allowDecoration) : "";
+        return result.toString();
     }
 
     @Override
@@ -124,7 +149,7 @@ public class MaskImpl implements Mask {
         return new MaskIterator(firstSlot);
     }
 
-    private String toStringFrom(final Slot startSlot, final boolean allowDecoration) {
+    public String toStringFrom(final Slot startSlot, final boolean allowDecoration) {
         final StringBuilder result = new StringBuilder();
 
         // create a string out of slots values
@@ -164,6 +189,10 @@ public class MaskImpl implements Mask {
         return result.toString();
     }
 
+    /**
+     * Looks for initial position for cursor since buffer can be predefined with starting
+     * characters
+     */
     @Override
     public int getInitialInputPosition() {
         int cursorPosition = 0;
@@ -186,11 +215,15 @@ public class MaskImpl implements Mask {
         return firstSlot.anyInputToTheRight();
     }
 
+    /**
+     * Checks whether user filled whole mask.
+     *
+     * @return true if the're no more empty slots
+     */
     @Override
     public boolean filled() {
         return filledFrom(firstSlot);
     }
-
 
     private boolean filledFrom(final Slot initialSlot) {
         if (initialSlot == null) {
@@ -211,8 +244,26 @@ public class MaskImpl implements Mask {
         return true;
     }
 
+    /**
+     * Method insert {@code input} to the buffer. Only validated characters would be inserted.
+     * Hardcoded slots are omitted. Method returns new cursor position that is affected by input
+     * and
+     * {@code cursorAfterTrailingHardcoded} flag. In most cases if input string is followed by a
+     * sequence of hardcoded characters we should place cursor after them. But this behaviour can
+     * be
+     * modified by {@code cursorAfterTrailingHardcoded} flag.
+     *
+     * @param position                     from which position to begin input
+     * @param input                        string to insert
+     * @param cursorAfterTrailingHardcoded when input is followed by a hardcoded characters
+     *                                     sequence
+     *                                     then this flag defines whether new cursor position
+     *                                     should
+     *                                     be after or before them
+     * @return cursor position after insert
+     */
     @Override
-    public int insertAt(final int position, @Nullable final CharSequence input, boolean cursorAfterTrailingHardcoded) {
+    public int insertAt(final int position, final CharSequence input, boolean cursorAfterTrailingHardcoded) {
         showHardcodedTail = true;
         if (!checkIsIndex(position) || input == null || input.length() == 0) {
             return position;
@@ -251,8 +302,8 @@ public class MaskImpl implements Mask {
                 slotCandidate = slotForInput;
                 final int insertOffset = slotCandidate.setValue(newValue, slotForInputIndex.indexOffset > 0);
 
-                slotCandidate = slotCandidate.getNextSlot();
                 cursorPosition += insertOffset;
+                slotCandidate = getSlot(cursorPosition);
             }
 
         }
@@ -275,16 +326,99 @@ public class MaskImpl implements Mask {
         return cursorPosition;
     }
 
+    /**
+     * Convenience method for {@link MaskImpl#insertAt(int, CharSequence, boolean)} that always
+     * places
+     * cursor after trailing hardcoded sequence.
+     *
+     * @param position from which position to begin input
+     * @param input    string to insert
+     * @return cursor position after insert
+     */
     @Override
-    public int insertAt(final int position, @Nullable final CharSequence input) {
+    public int insertAt(final int position, final CharSequence input) {
         return insertAt(position, input, true);
     }
 
+    /**
+     * Convenience method for {@link MaskImpl#insertAt(int, CharSequence, boolean)} that inserts
+     * text
+     * at
+     * the first position of a mask and always places cursor after trailing hardcoded sequence.
+     *
+     * @param input string to insert
+     * @return cursor position after insert
+     */
     @Override
-    public int insertFront(final @Nullable CharSequence input) {
+    public int insertFront(final CharSequence input) {
         return insertAt(0, input, true);
     }
 
+    @Deprecated
+    public int insertAt(final CharSequence input, final int position, boolean cursorAfterTrailingHardcoded) {
+        return insertAt(position, input, cursorAfterTrailingHardcoded);
+    }
+
+    /**
+     * Removes available symbols from the buffer. This method should be called on deletion event of
+     * user's input. Symbols are deleting backwards (just as backspace key). Hardcoded symbols
+     * would
+     * not be deleted, only cursor will be moved over them.
+     * <p>
+     * Method also updates {@code showHardcodedTail} flag that defines whether tail of hardcoded
+     * symbols (at the end of user's input) should be shown. In most cases it should not. The only
+     * case when they are visible - buffer starts with them and deletion was inside them.
+     *
+     * @param position from where to start deletion
+     * @param count    number of  symbols to delete.
+     * @return new cursor position after deletion
+     */
+    @Override
+    public int removeBackwards(int position, int count) {
+
+        // go back fom position and remove any non-hardcoded characters
+        for (int i = 0; i < count; i++) {
+            if (checkIsIndex(position)) {
+                final Slot s = getSlot(position);
+                if (s != null && !s.hardcoded()) {
+                    s.setValue(null);
+                }
+            }
+
+
+            position--;
+        }
+
+        trimTail();
+
+        int cursorPosition = position;
+
+        // We could remove a symbol before a sequence of hardcoded characters
+        // that are now tail. It this case our cursor index will point at non printable
+        // character. To avoid this find next not-hardcoded symbol to the left
+        Slot slot = getSlot(cursorPosition);
+        while (slot != null && slot.hardcoded() && cursorPosition > 0) {
+            slot = getSlot(--cursorPosition);
+            if (slot != null) {
+                showHardcodedTail = !slot.anyInputToTheRight();
+            }
+        }
+
+        // check if we've reached begin of the string
+        // this can happen not only because we've been 'deleting' hardcoded characters
+        // at he begin of the string.
+        if (cursorPosition <= 0) {
+            showHardcodedTail = !hideHardcodedHead;
+        }
+
+        if (showHardcodedTail) {
+            cursorPosition = position;
+        }
+
+        cursorPosition++;
+
+        return (cursorPosition >= 0 && cursorPosition <= size) ? cursorPosition : 0;
+    }
 
     @Override
     public int getSize() {
@@ -301,77 +435,22 @@ public class MaskImpl implements Mask {
         this.showingEmptySlots = showingEmptySlots;
     }
 
-    /**
-     * Removes available symbols from the buffer. This method should be called on deletion event of
-     * user's input. Symbols are deleting backwards (just as backspace key). Hardcoded symbols
-     * would not be deleted, only cursor will be moved over them.
-     * <p>
-     * Method also updates {@code showHardcodedTail} flag that defines whether tail of hardcoded
-     * symbols (at the end of user's input) should be shown. In most cases it should not. The only
-     * case when they are visible - buffer starts with them and deletion was inside them.
-     *
-     * @param position from where to start deletion
-     * @param count    number of  symbols to delete.
-     * @return new cursor position after deletion
-     */
-    @Override
-    public int removeBackwards(int position, int count) {
-        // go back fom position and remove any non-hardcoded characters
-        for (int i = 0; i < count; i++) {
-            if (checkIsIndex(position)) {
-                final Slot s = getSlot(position);
-                if (s != null && !s.hardcoded()) {
-                    s.setValue(null);
-                }
-            }
-
-            position--;
-        }
-
-        trimTail();
-
-        int cursorPosition = position;
-
-        Slot slot = getSlot(cursorPosition);
-        // all the following code will only occur if we're not trying to remove "hardcoded head"
-        if (slot != null && (slot.anyInputToTheLeft() || !slot.anyInputToTheRight())) {
-            // We could remove a symbol before a sequence of hardcoded characters
-            // that are now tail. It this case our cursor index will point at non printable
-            // character. To avoid this find next not-hardcoded symbol to the left
-            while (slot != null && slot.hardcoded() && cursorPosition > 0) {
-                slot = getSlot(--cursorPosition);
-                if (slot != null) {
-                    showHardcodedTail = !slot.anyInputToTheRight();
-                }
-            }
-
-            // check if we've reached begin of the string
-            // this can happen not only because we've been 'deleting' hardcoded characters
-            // at he begin of the string.
-            showHardcodedTail &= cursorPosition <= 0 && !hideHardcodedHead;
-            if (showHardcodedTail) {
-                cursorPosition = position;
-            }
-        }
-
-        cursorPosition++;
-
-        return (0 <= cursorPosition && cursorPosition <= size) ? cursorPosition : 0;
-    }
-
-    @NonNull
     @Override
     public Character getPlaceholder() {
-        return placeholder != null ? placeholder : Slot.PLACEHOLDER_DEFAULT;
+        return placeholder != null ? placeholder : PLACEHOLDER_DEFAULT;
     }
 
     @Override
     public void setPlaceholder(Character placeholder) {
-        if (placeholder == null) {
-            throw new IllegalArgumentException("Placeholder is null");
-        }
-
         this.placeholder = placeholder;
+    }
+
+    /**
+     * Use {@link MaskImpl#isHideHardcodedHead()} instead
+     */
+    @Deprecated
+    public boolean shouldHideHardcodedHead() {
+        return isHideHardcodedHead();
     }
 
     @Override
@@ -379,9 +458,21 @@ public class MaskImpl implements Mask {
         return hideHardcodedHead;
     }
 
+    /**
+     * Use {@link MaskImpl#setHideHardcodedHead(boolean)}
+     */
+    @Deprecated
+    public void setShouldHideHardcodedHead(boolean shouldHideHardcodedHead) {
+        setHideHardcodedHead(shouldHideHardcodedHead);
+    }
+
     @Override
     public void setHideHardcodedHead(boolean shouldHideHardcodedHead) {
         this.hideHardcodedHead = shouldHideHardcodedHead;
+
+        if (!hasUserInput()) {
+            showHardcodedTail = !hideHardcodedHead;
+        }
     }
 
     @Override
@@ -422,6 +513,12 @@ public class MaskImpl implements Mask {
 
     }
 
+    /**
+     * Returns slot by its index
+     *
+     * @param index index of a slot
+     * @return null if index is incorrect and slot otherwise
+     */
     private Slot getSlot(int index) {
         if (!checkIsIndex(index)) {
             return null;
@@ -474,6 +571,12 @@ public class MaskImpl implements Mask {
         return result;
     }
 
+    /**
+     * Checks whether @{code position} posits at a slot
+     *
+     * @param position index to check
+     * @return true in position is inside the mask
+     */
     private boolean checkIsIndex(int position) {
         return 0 <= position && position < size;
     }
@@ -501,10 +604,14 @@ public class MaskImpl implements Mask {
      * @param slot     slot ot insert. IMPORTANT: a copy of this slot will be inserted!
      * @return newly inserted slot (copy of the passed one)
      */
-    private Slot insertSlotAt(final int position, @NonNull final Slot slot) {
+    private Slot insertSlotAt(final int position, final Slot slot) {
 
         if (position < 0 || size < position) {
-            throw new IndexOutOfBoundsException("New slot position should be inside the mask. Or on the tail (position = size)");
+            throw new IllegalArgumentException("New slot position should be inside the mask. Or on the tail (position = size)");
+        }
+
+        if (slot == null) {
+            throw new IllegalArgumentException("Slot cannot be null");
         }
 
         final Slot toInsert = new Slot(slot);
@@ -552,18 +659,14 @@ public class MaskImpl implements Mask {
 
         Slot currentSlot = lastSlot;
         Slot prevSlot = currentSlot.getPrevSlot();
-        while (isAllowedToRemoveSlot(currentSlot, prevSlot)) {
+        while (currentSlot.hasTag(TAG_EXTENSION) &&
+                prevSlot.hasTag(TAG_EXTENSION) &&
+                currentSlot.getValue() == null &&
+                prevSlot.getValue() == null) {
             removeSlotAt(size - 1);
             currentSlot = prevSlot;
             prevSlot = prevSlot.getPrevSlot();
         }
-    }
-
-    private boolean isAllowedToRemoveSlot(Slot removalCandidate, Slot previousSlot) {
-        return removalCandidate.hasTag(TAG_EXTENSION) &&
-                previousSlot.hasTag(TAG_EXTENSION) &&
-                removalCandidate.getValue() == null &&
-                previousSlot.getValue() == null;
     }
 
     /**
@@ -586,7 +689,7 @@ public class MaskImpl implements Mask {
         return out;
     }
 
-    private static class MaskIterator implements Iterator<Slot> {
+    public class MaskIterator implements Iterator<Slot> {
 
         Slot nextSlot;
 
@@ -625,3 +728,4 @@ public class MaskImpl implements Mask {
         boolean nonHarcodedSlotSkipped;
     }
 }
+

@@ -1,19 +1,3 @@
-/*
- * Copyright © 2016 Tinkoff Bank
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package ru.tinkoff.decoro;
 
 import android.os.Parcel;
@@ -34,7 +18,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * @author Mikhail Artemev
+ * @author Mikhail Artemyev
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
@@ -42,7 +26,7 @@ public class SlotTest {
 
     @Test
     public void parcelable() {
-        Slot before = new Slot(Slot.RULE_INPUT_MOVES_CURRENT,
+        Slot before = new Slot(Slot.RULES_DEFAULT,
                 'x',
                 SlotValidatorSet.setOf(new SlotValidators.MaskedDigitValidator()));
 
@@ -68,12 +52,12 @@ public class SlotTest {
     }
 
     @Test
-    public void setValueOffset() {
-        Slot b = new Slot(Slot.RULE_INPUT_MOVES_CURRENT, null, null);
+    public void setValueOffset(){
+        Slot b = new Slot(Slot.RULES_DEFAULT, null, null);
         assertEquals(1, b.setValue(' '));
         assertEquals(1, b.setValue('2'));
 
-        Slot c = new Slot(Slot.RULE_INPUT_MOVES_CURRENT, null, null);
+        Slot c = new Slot(Slot.RULES_DEFAULT, null, null);
         c.setPrevSlot(b);
         b.setNextSlot(c);
 
