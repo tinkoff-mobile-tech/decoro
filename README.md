@@ -10,7 +10,7 @@ Decoro
 Добавьте в build.gradle вашего проекта:
 ```Groovy
 dependencies {
-    compile "ru.tinkoff.decoro:decoro:1.0.2"
+    compile "ru.tinkoff.decoro:decoro:1.0.3"
 }
 ```
 
