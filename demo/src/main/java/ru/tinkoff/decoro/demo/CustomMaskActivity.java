@@ -47,6 +47,7 @@ public class CustomMaskActivity extends AppCompatActivity {
                 maskDescriptor = MaskDescriptor.emptyMask().setTerminated(false);
             } else {
                 maskDescriptor = MaskDescriptor.ofRawMask(s.toString())
+                        .setHideHardcodedHead(false)
                         .setInitialValue(dataEdit.getText().toString());
             }
 

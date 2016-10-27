@@ -41,7 +41,6 @@ public class MaskImpl implements Mask {
     private static final int TAG_EXTENSION = -149635;
 
     // Members available outside the Mask
-    private int size = 0;
     private boolean terminated = true;
     private Character placeholder;
     private boolean showingEmptySlots = false;
@@ -49,41 +48,29 @@ public class MaskImpl implements Mask {
     private boolean hideHardcodedHead = false;
 
     // Inner use only
-    private Slot firstSlot;
-    private Slot lastSlot;
     private boolean showHardcodedTail = true;
+    private SlotsList slots;
 
     public MaskImpl(@NonNull Slot[] slots, boolean terminated) {
         this.terminated = terminated;
-        this.size = slots.length;
 
-        if (this.size == 0) {
-            return;
-        }
+        this.slots = SlotsList.ofArray(slots);
 
-        this.firstSlot = new Slot(slots[0]);
-        Slot prev = this.firstSlot;
-
-        if (this.size == 1) {
-            lastSlot = this.firstSlot;
+        if (this.slots.getSize() == 1) {
             if (!terminated) {
                 extendTail(1);
             }
         }
+    }
 
-        // link slots
-        for (int i = 1; i < slots.length; i++) {
-            Slot next = new Slot(slots[i]);
-            prev.setNextSlot(next);
-            next.setPrevSlot(prev);
-
-            prev = next;
-
-            if (i == slots.length - 1) {
-                this.lastSlot = next;
-            }
-        }
-
+    public MaskImpl(@NonNull MaskImpl mask) {
+        this.terminated = mask.terminated;
+        this.placeholder = mask.placeholder;
+        this.showingEmptySlots = mask.showingEmptySlots;
+        this.forbidInputWhenFilled = mask.forbidInputWhenFilled;
+        this.hideHardcodedHead = mask.hideHardcodedHead;
+        this.showHardcodedTail = mask.showHardcodedTail;
+        this.slots = new SlotsList(mask.slots);
     }
 
     @NonNull
@@ -110,12 +97,12 @@ public class MaskImpl implements Mask {
 
     @NonNull
     private String toString(boolean allowDecoration) {
-        return firstSlot != null ? toStringFrom(firstSlot, allowDecoration) : "";
+        return !slots.isEmpty() ? toStringFrom(slots.getFirstSlot(), allowDecoration) : "";
     }
 
     @Override
     public Iterator<Slot> iterator() {
-        return new MaskIterator(firstSlot);
+        return slots.iterator();
     }
 
     private String toStringFrom(final Slot startSlot, final boolean allowDecoration) {
@@ -132,7 +119,7 @@ public class MaskImpl implements Mask {
 
                 if (!anyInputFromHere && !showingEmptySlots) {
                     // user input nothing to the right from this point
-                    if (!showHardcodedTail || !checkIsIndex(slot.hardcodedSequenceEndIndex() - 1 + index)) {
+                    if (!showHardcodedTail || !slots.checkIsIndex(slot.hardcodedSequenceEndIndex() - 1 + index)) {
                         break;
                     }
                 }
@@ -162,7 +149,7 @@ public class MaskImpl implements Mask {
     public int getInitialInputPosition() {
         int cursorPosition = 0;
 
-        Slot slot = getSlot(cursorPosition);
+        Slot slot = slots.getSlot(cursorPosition);
         while (slot != null && slot.getValue() != null) {
             cursorPosition++;
             slot = slot.getNextSlot();
@@ -173,16 +160,16 @@ public class MaskImpl implements Mask {
 
     @Override
     public boolean hasUserInput() {
-        if (firstSlot == null) {
+        if (slots.isEmpty()) {
             return false;
         }
 
-        return firstSlot.anyInputToTheRight();
+        return slots.getFirstSlot().anyInputToTheRight();
     }
 
     @Override
     public boolean filled() {
-        return filledFrom(firstSlot);
+        return !slots.isEmpty() && filledFrom(slots.getFirstSlot());
     }
 
     private boolean filledFrom(final Slot initialSlot) {
@@ -224,14 +211,14 @@ public class MaskImpl implements Mask {
      */
     @Override
     public int insertAt(final int position, @Nullable final CharSequence input, boolean cursorAfterTrailingHardcoded) {
-        if (!checkIsIndex(position) || input == null || input.length() == 0) {
+        if (slots.isEmpty() || !slots.checkIsIndex(position) || input == null || input.length() == 0) {
             return position;
         }
 
         showHardcodedTail = true;
 
         int cursorPosition = position;
-        Slot slotCandidate = getSlot(position);
+        Slot slotCandidate = slots.getSlot(position);
 
         if (forbidInputWhenFilled && filledFrom(slotCandidate)) {
             return position;
@@ -253,8 +240,8 @@ public class MaskImpl implements Mask {
             }
 
             cursorPosition += slotForInputIndex.indexOffset;
-            final Slot slotForInput = getSlot(cursorPosition);
-            if (slotForInput != null && slotForInput == lastSlot && !terminated) {
+            final Slot slotForInput = slots.getSlot(cursorPosition);
+            if (slotForInput != null && slotForInput == slots.getLastSlot() && !terminated) {
                 // extend mask to fit all VALID input characters (if mask non-terminated)
                 extendTail(slotForInput.getValidators().countValidIn(inStack) + 1);
             }
@@ -264,7 +251,7 @@ public class MaskImpl implements Mask {
                 final int insertOffset = slotCandidate.setValue(newValue, slotForInputIndex.indexOffset > 0);
 
                 cursorPosition += insertOffset;
-                slotCandidate = getSlot(cursorPosition);
+                slotCandidate = slots.getSlot(cursorPosition);
             }
 
         }
@@ -281,7 +268,7 @@ public class MaskImpl implements Mask {
         }
 
         // allow hardcoded tail be visible only if we've inserted at the end of the input
-        final Slot nextSlot = getSlot(cursorPosition);
+        final Slot nextSlot = slots.getSlot(cursorPosition);
         showHardcodedTail = nextSlot == null || !nextSlot.anyInputToTheRight();
 
         return cursorPosition;
@@ -341,8 +328,8 @@ public class MaskImpl implements Mask {
 
         // go back fom position and remove any non-hardcoded characters
         for (int i = 0; i < count; i++) {
-            if (checkIsIndex(cursorPosition)) {
-                final Slot s = getSlot(cursorPosition);
+            if (slots.checkIsIndex(cursorPosition)) {
+                final Slot s = slots.getSlot(cursorPosition);
                 if (s != null && !s.hardcoded()) {
                     s.setValue(null);
                 }
@@ -361,7 +348,7 @@ public class MaskImpl implements Mask {
         int tmpPosition = cursorPosition;
         Slot slot;
         do {
-            slot = getSlot(--tmpPosition);
+            slot = slots.getSlot(--tmpPosition);
         } while (slot != null && slot.hardcoded() && tmpPosition > 0);
 
         // show hardcoded tail only is this tail is hardcode head and hideHardcodedHead is on
@@ -371,12 +358,12 @@ public class MaskImpl implements Mask {
             cursorPosition = tmpPosition + 1;
         }
 
-        return (cursorPosition >= 0 && cursorPosition <= size) ? cursorPosition : 0;
+        return (cursorPosition >= 0 && cursorPosition <= slots.getSize()) ? cursorPosition : 0;
     }
 
     @Override
     public int getSize() {
-        return size;
+        return slots.getSize();
     }
 
     @Override
@@ -429,62 +416,6 @@ public class MaskImpl implements Mask {
         this.forbidInputWhenFilled = forbidInputWhenFilled;
     }
 
-    private void removeSlotAt(int position) {
-        removeSlot(getSlot(position));
-    }
-
-    private void removeSlot(Slot slotToRemove) {
-        if (slotToRemove == null) {
-            return;
-        }
-
-        Slot left = slotToRemove.getPrevSlot();
-        Slot right = slotToRemove.getNextSlot();
-
-        if (left != null) {
-            left.setNextSlot(right);
-        } else {
-            firstSlot = right;
-        }
-
-        if (right != null) {
-            right.setPrevSlot(left);
-        } else {
-            lastSlot = left;
-        }
-
-        size--;
-
-    }
-
-    private Slot getSlot(int index) {
-        if (!checkIsIndex(index)) {
-            return null;
-        }
-
-        Slot result;
-
-        if (index < (size >> 1)) {
-            // first half of a list
-            result = firstSlot;
-            for (int i = 0; i < index; i++) {
-                result = result.getNextSlot();
-            }
-        } else {
-            // second half of a list
-            result = lastSlot;
-            for (int i = size - 1; i > index; i--) {
-                result = result.getPrevSlot();
-            }
-        }
-
-        if (result == null) {
-            throw new IllegalStateException("Slot inside the mask should not be null. But it is.");
-        }
-
-        return result;
-    }
-
     /**
      * Looks for a slot to insert {@code value}. Search moves to the right from the specified one
      * (including it). While searching it checks whether the're any non-hardcoded slots that cannot
@@ -509,10 +440,6 @@ public class MaskImpl implements Mask {
         return result;
     }
 
-    private boolean checkIsIndex(int position) {
-        return 0 <= position && position < size;
-    }
-
     /**
      * Inserts slots at the and of the mask and mark newly inserted slot as 'extension' (extended
      * tail of non-terminated mask). 'Extended' slots will be removed when their values are cleared
@@ -524,71 +451,20 @@ public class MaskImpl implements Mask {
 
         while (--count >= 0) {
             // create a copy of the last slot and make it the last one
-            final Slot inserted = insertSlotAt(size, lastSlot);
+            final Slot inserted = slots.insertSlotAt(slots.getSize(), slots.getLastSlot());
             inserted.withTags(TAG_EXTENSION);
         }
     }
 
-    /**
-     * Inserts a slot on a specified position
-     *
-     * @param position index where new slot weill be placed should be >= 0 and <= size.
-     * @param slot     slot ot insert. IMPORTANT: a copy of this slot will be inserted!
-     * @return newly inserted slot (copy of the passed one)
-     */
-    private Slot insertSlotAt(final int position, @NonNull final Slot slot) {
-
-        if (position < 0 || size < position) {
-            throw new IndexOutOfBoundsException("New slot position should be inside the mask. Or on the tail (position = size)");
-        }
-
-        final Slot toInsert = new Slot(slot);
-
-        Slot currentSlot = getSlot(position);
-        Slot leftNeighbour;
-        Slot rightNeighbour = null;
-        if (currentSlot == null) {
-            // this can happen only when position == size.
-            // it means we want to add the slot on the tail
-            leftNeighbour = lastSlot;
-        } else {
-            leftNeighbour = currentSlot.getPrevSlot();
-            rightNeighbour = currentSlot;
-        }
-
-        toInsert.setNextSlot(rightNeighbour);
-        toInsert.setPrevSlot(leftNeighbour);
-
-        if (rightNeighbour != null) {
-            // right neighbour is only available for non-last slots
-            rightNeighbour.setPrevSlot(toInsert);
-        }
-
-        if (leftNeighbour != null) {
-            // left neighbour is only available for not-first slots
-            leftNeighbour.setNextSlot(toInsert);
-        }
-
-        if (position == 0) {
-            firstSlot = toInsert;
-        } else if (position == size) {
-            lastSlot = toInsert;
-        }
-
-        size++;
-
-        return toInsert;
-    }
-
     private void trimTail() {
-        if (terminated || lastSlot == null) {
+        if (terminated || slots.isEmpty()) {
             return;
         }
 
-        Slot currentSlot = lastSlot;
+        Slot currentSlot = slots.getLastSlot();
         Slot prevSlot = currentSlot.getPrevSlot();
         while (isAllowedToRemoveSlot(currentSlot, prevSlot)) {
-            removeSlotAt(size - 1);
+            slots.removeSlotAt(slots.getSize() - 1);
             currentSlot = prevSlot;
             prevSlot = prevSlot.getPrevSlot();
         }
@@ -619,36 +495,6 @@ public class MaskImpl implements Mask {
         }
 
         return out;
-    }
-
-    private static class MaskIterator implements Iterator<Slot> {
-
-        Slot nextSlot;
-
-        public MaskIterator(Slot currentSlot) {
-            if (currentSlot == null) {
-                throw new IllegalArgumentException("Initial slot for iterator cannot be null");
-            }
-
-            this.nextSlot = currentSlot;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return nextSlot != null;
-        }
-
-        @Override
-        public Slot next() {
-            Slot current = nextSlot;
-            nextSlot = nextSlot.getNextSlot();
-            return current;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Mask cannot be modified from outside!");
-        }
     }
 
     private static class SlotIndexOffset {
