@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
@@ -34,17 +35,24 @@ import ru.tinkoff.decoro.watchers.FormatWatcherImpl;
 public class CustomMaskActivity extends AppCompatActivity {
 
     private EditText dataEdit;
-    private EditText maskEdit;
 
     private FormatWatcherImpl formatWatcher;
 
     private TextWatcher maskTextWatcher = new TextWatcherImpl() {
         @Override
         public void afterTextChanged(Editable s) {
-            final MaskDescriptor maskDescriptor = MaskDescriptor.ofRawMask(s.toString())
-                    .withHideHardcodedHead(true)
-                    .withInitialValue(dataEdit.getText().toString());
+            final MaskDescriptor maskDescriptor;
+
+            if (TextUtils.isEmpty(s)) {
+                maskDescriptor = MaskDescriptor.emptyMask().setTerminated(false);
+            } else {
+                maskDescriptor = MaskDescriptor.ofRawMask(s.toString())
+                        .setHideHardcodedHead(false)
+                        .setInitialValue(dataEdit.getText().toString());
+            }
+
             formatWatcher.changeMask(maskDescriptor);
+
         }
     };
 
@@ -53,11 +61,11 @@ public class CustomMaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_mask);
 
-        maskEdit = (EditText) findViewById(R.id.editMask);
+        EditText maskEdit = (EditText) findViewById(R.id.editMask);
         maskEdit.addTextChangedListener(maskTextWatcher);
 
         formatWatcher = new FormatWatcherImpl(new UnderscoreDigitSlotsParser(),
-                MaskDescriptor.emptyMask().withTermination(false));
+                MaskDescriptor.emptyMask().setTerminated(false));
 
         dataEdit = (EditText) findViewById(R.id.editData);
         formatWatcher.installOn(dataEdit);

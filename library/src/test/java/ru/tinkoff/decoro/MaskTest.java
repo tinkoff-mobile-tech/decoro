@@ -175,6 +175,13 @@ public class MaskTest {
         assertEquals(0, mask.removeBackwards(0, 1)); // (empty)
 
         assertEquals(4, mask.insertFront("12345656")); // 1-23|
+
+        mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        mask.setHideHardcodedHead(true);
+        assertEquals(4, mask.removeBackwards(4, 1));
+        assertEquals(6, mask.insertFront("99"));
+        assertEquals(4, mask.removeBackwards(4, 1));
+        assertEquals(3, mask.removeBackwards(3, 1));
     }
 
     @Test

@@ -16,42 +16,34 @@
 
 package ru.tinkoff.decoro;
 
-import android.os.Parcel;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import ru.tinkoff.decoro.slots.PredefinedSlots;
-import ru.tinkoff.decoro.slots.Slot;
+import ru.tinkoff.decoro.parser.PhoneNumberUnderscoreSlotsParser;
+import ru.tinkoff.decoro.parser.SlotsParser;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Mikhail Artemev
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-public class MaskDescriptorTest {
+public class PhoneNumberUnderscoreSlotsParserTest {
 
     @Test
-    public void parcelable() {
-        MaskDescriptor before = new MaskDescriptor()
-                .setForbidInputWhenFilled(true)
-                .setHideHardcodedHead(true)
-                .setRawMask("___-___")
-                .setSlots(new Slot[]{PredefinedSlots.digit()})
-                .setTerminated(false);
+    public void toUnformattedString() {
+        SlotsParser parser = new PhoneNumberUnderscoreSlotsParser();
 
-        Parcel parcel = Parcel.obtain();
-        before.writeToParcel(parcel, 0);
+        Mask mask = MaskImpl.createTerminated(parser.parseSlots("+675 ___-____"));
 
-        parcel.setDataPosition(0);
+        mask.insertFront(null);
+        assertEquals("+675", mask.toUnformattedString());
 
-        MaskDescriptor after = MaskDescriptor.CREATOR.createFromParcel(parcel);
-        Assert.assertEquals(before, after);
-
-        parcel.recycle();
+        mask.insertFront("99987654");
+        assertEquals("+6759998765", mask.toUnformattedString());
     }
 
 }

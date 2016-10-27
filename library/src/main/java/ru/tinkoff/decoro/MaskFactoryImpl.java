@@ -53,11 +53,7 @@ public class MaskFactoryImpl implements MaskFactory {
 
         final Mask mask = new MaskImpl(slots, maskDescriptor.isTerminated());
         mask.setForbidInputWhenFilled(maskDescriptor.isForbidInputWhenFilled());
-        mask.setShowingEmptySlots(maskDescriptor.isShowEmptySlots());
         mask.setHideHardcodedHead(maskDescriptor.isHideHardcodedHead());
-        if (maskDescriptor.getEmptySlotPlaceholder() != null) {
-            mask.setPlaceholder(mask.getPlaceholder());
-        }
 
         return mask;
     }

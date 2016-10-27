@@ -32,8 +32,8 @@ import ru.tinkoff.decoro.MaskFactory;
 
 /**
  * <p>
- * This class encapsutates logic of formatting (pretty printing) content of a TextView. All
- * the formatting logic is incapsulated inside the {@link Mask} class. This class is only
+ * This class encapsulates logic of formatting (pretty printing) content of a TextView. All
+ * the formatting logic is encapsulated inside the {@link Mask} class. This class is only
  * used to follow TextView changes and format it according to the {@link Mask}. It's okay
  * to
  * use it either with {@link TextView} or {@link EditText}. Important note for using with
@@ -57,7 +57,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     private boolean selfEdit = false;
     private boolean formattingCancelled = false;
 
-    private WeakReference<FormattedTextChangeListener> weakCallback;
+    private FormattedTextChangeListener callback;
 
     protected FormatWatcher() {
     }
@@ -202,7 +202,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         }
 
         // ask client code - should we proceed the modification of a mask
-        final FormattedTextChangeListener callback = weakCallback != null ? weakCallback.get() : null;
         if (callback != null && callback.beforeFormatting(textBeforeChange.toString(), s.toString())) {
             formattingCancelled = true;
             return;
@@ -240,7 +239,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             setSelection(cursorPosition);
         }
 
-        final FormattedTextChangeListener callback = weakCallback != null ? weakCallback.get() : null;
         if (callback != null) {
             callback.onTextFormatted(this, toString());
         }
@@ -256,8 +254,8 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         return this.textView == view;
     }
 
-    public void setCallback(@NonNull FormattedTextChangeListener weakCallback) {
-        this.weakCallback = new WeakReference<>(weakCallback);
+    public void setCallback(@NonNull FormattedTextChangeListener callback) {
+        this.callback = callback;
     }
 
     public int getCursorPosition() {

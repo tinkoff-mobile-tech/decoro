@@ -330,36 +330,37 @@ public class MaskImpl implements Mask {
      * symbols (at the end of user's input) should be shown. In most cases it should not. The only
      * case when they are visible - buffer starts with them and deletion was inside them.
      *
-     * @param position from where to start deletion
+     * @param cursorPosition from where to start deletion
      * @param count    number of  symbols to delete.
      * @return new cursor position after deletion
      */
     @Override
-    public int removeBackwards(int position, int count) {
+    public int removeBackwards(final int position, int count) {
+
+        int cursorPosition = position;
 
         // go back fom position and remove any non-hardcoded characters
         for (int i = 0; i < count; i++) {
-            if (checkIsIndex(position)) {
-                final Slot s = getSlot(position);
+            if (checkIsIndex(cursorPosition)) {
+                final Slot s = getSlot(cursorPosition);
                 if (s != null && !s.hardcoded()) {
                     s.setValue(null);
                 }
             }
 
-
-            position--;
+            cursorPosition--;
         }
 
         trimTail();
 
-        int cursorPosition = position;
+        int tmpPosition = cursorPosition;
 
         // We could remove a symbol before a sequence of hardcoded characters
         // that are now tail. It this case our cursor index will point at non printable
         // character. To avoid this find next not-hardcoded symbol to the left
-        Slot slot = getSlot(cursorPosition);
-        while (slot != null && slot.hardcoded() && cursorPosition > 0) {
-            slot = getSlot(--cursorPosition);
+        Slot slot = getSlot(tmpPosition);
+        while (slot != null && slot.hardcoded() && tmpPosition > 0) {
+            slot = getSlot(--tmpPosition);
             if (slot != null) {
                 showHardcodedTail = !slot.anyInputToTheRight();
             }
@@ -368,12 +369,8 @@ public class MaskImpl implements Mask {
         // check if we've reached begin of the string
         // this can happen not only because we've been 'deleting' hardcoded characters
         // at he begin of the string.
-        if (cursorPosition <= 0) {
+        if (tmpPosition <= 0) {
             showHardcodedTail = !hideHardcodedHead;
-        }
-
-        if (showHardcodedTail) {
-            cursorPosition = position;
         }
 
         cursorPosition++;

@@ -40,26 +40,26 @@ public class MaskDescriptor implements Serializable, Parcelable {
         }
 
         return new MaskDescriptor()
-                .withRawMask(rawMask);
+                .setRawMask(rawMask);
     }
 
     @NonNull
     public static MaskDescriptor ofRawMask(@Nullable final String rawMask, final boolean terminated) {
         return new MaskDescriptor()
-                .withRawMask(rawMask)
-                .withTermination(terminated);
+                .setRawMask(rawMask)
+                .setTerminated(terminated);
     }
 
     @NonNull
     public static MaskDescriptor ofSlots(@Nullable Slot[] slots) {
-        return new MaskDescriptor().withSlots(slots);
+        return new MaskDescriptor().setSlots(slots);
     }
 
     @NonNull
     public static MaskDescriptor emptyMask() {
         return new MaskDescriptor()
-                .withSlots(new Slot[]{PredefinedSlots.any()})
-                .withTermination(false);
+                .setSlots(new Slot[]{PredefinedSlots.any()})
+                .setTerminated(false);
     }
 
     private Slot[] slots;
@@ -68,11 +68,8 @@ public class MaskDescriptor implements Serializable, Parcelable {
     private String initialValue;
 
     private boolean terminated = true;
-    private boolean showEmptySlots = false;
     private boolean forbidInputWhenFilled = false;
     private boolean hideHardcodedHead = false;
-
-    private Character emptySlotPlaceholder;
 
     public MaskDescriptor() {
     }
@@ -87,11 +84,8 @@ public class MaskDescriptor implements Serializable, Parcelable {
         this.initialValue = copy.initialValue;
 
         this.terminated = copy.terminated;
-        this.showEmptySlots = copy.showEmptySlots;
         this.hideHardcodedHead = copy.hideHardcodedHead;
         this.forbidInputWhenFilled = copy.forbidInputWhenFilled;
-
-        this.emptySlotPlaceholder = copy.emptySlotPlaceholder;
     }
 
     protected MaskDescriptor(Parcel in) {
@@ -99,10 +93,8 @@ public class MaskDescriptor implements Serializable, Parcelable {
         this.rawMask = in.readString();
         this.initialValue = in.readString();
         this.terminated = in.readByte() != 0;
-        this.showEmptySlots = in.readByte() != 0;
         this.forbidInputWhenFilled = in.readByte() != 0;
         this.hideHardcodedHead = in.readByte() != 0;
-        this.emptySlotPlaceholder = (Character) in.readSerializable();
     }
 
     public boolean isValid() {
@@ -115,41 +107,64 @@ public class MaskDescriptor implements Serializable, Parcelable {
         }
     }
 
+    /**
+     * @deprecated use {link {@link #setSlots(Slot[])}} instead
+     */
+    @Deprecated
     public MaskDescriptor withSlots(@Nullable Slot[] value) {
         slots = value;
         return this;
     }
 
+    /**
+     * @deprecated use {link {@link #setRawMask(String)}} instead
+     */
     public MaskDescriptor withRawMask(@Nullable String value) {
         rawMask = value;
         return this;
     }
 
+    /**
+     * @deprecated use {link {@link #setInitialValue(String)}} instead
+     */
     public MaskDescriptor withInitialValue(@Nullable String value) {
         initialValue = value;
         return this;
     }
 
+    /**
+     * @deprecated use {link {@link #setTerminated(boolean)}} instead
+     */
     public MaskDescriptor withTermination(boolean value) {
         terminated = value;
         return this;
     }
 
+    /**
+     * @deprecated Feature unavailable
+     */
     public MaskDescriptor withShowingEmptySlots(boolean value) {
-        showEmptySlots = value;
         return this;
     }
 
+    /**
+     * @deprecated use {link {@link #setEmptySlotPlaceholder(Character)}} instead
+     */
     public MaskDescriptor withEmptySlotPalceholder(@Nullable Character value) {
-        emptySlotPlaceholder = value;
         return this;
     }
 
+    /**
+     * @deprecated use {link {@link #setForbidInputWhenFilled(boolean)}} instead
+     */
     public MaskDescriptor withForbiddingInputWhenFilled(boolean value) {
         forbidInputWhenFilled = value;
         return this;
     }
 
+    /**
+     * @deprecated use {link {@link #setHideHardcodedHead(boolean)}} instead
+     */
     public MaskDescriptor withHideHardcodedHead(boolean value) {
         hideHardcodedHead = value;
         return this;
@@ -160,8 +175,9 @@ public class MaskDescriptor implements Serializable, Parcelable {
         return slots;
     }
 
-    public void setSlots(@Nullable Slot[] slots) {
+    public MaskDescriptor setSlots(@Nullable Slot[] slots) {
         this.slots = slots;
+        return this;
     }
 
     @Nullable
@@ -169,16 +185,18 @@ public class MaskDescriptor implements Serializable, Parcelable {
         return rawMask;
     }
 
-    public void setRawMask(@Nullable String rawMask) {
+    public MaskDescriptor setRawMask(@Nullable String rawMask) {
         this.rawMask = rawMask;
+        return this;
     }
 
     public boolean isTerminated() {
         return terminated;
     }
 
-    public void setTerminated(boolean terminated) {
+    public MaskDescriptor setTerminated(boolean terminated) {
         this.terminated = terminated;
+        return this;
     }
 
     @Nullable
@@ -186,41 +204,60 @@ public class MaskDescriptor implements Serializable, Parcelable {
         return initialValue;
     }
 
-    public void setInitialValue(@Nullable String initialValue) {
+    public MaskDescriptor setInitialValue(@Nullable String initialValue) {
         this.initialValue = initialValue;
+        return this;
     }
 
+    /**
+     * @deprecated Feature unavailable
+     */
+    @Deprecated
     public boolean isShowEmptySlots() {
-        return showEmptySlots;
+        return false;
     }
 
-    public void setShowEmptySlots(boolean showEmptySlots) {
-        this.showEmptySlots = showEmptySlots;
+    /**
+     * @deprecated Feature unavailable
+     */
+    @Deprecated
+    public MaskDescriptor setShowEmptySlots(boolean showEmptySlots) {
+        return this;
     }
 
+    /**
+     * @deprecated Feature unavailable
+     */
+    @Deprecated
     @Nullable
     public Character getEmptySlotPlaceholder() {
-        return emptySlotPlaceholder;
+        return '_';
     }
 
-    public void setEmptySlotPlaceholder(@Nullable Character emptySlotPlaceholder) {
-        this.emptySlotPlaceholder = emptySlotPlaceholder;
+    /**
+     * @deprecated Feature unavailable
+     */
+    @Deprecated
+    public MaskDescriptor setEmptySlotPlaceholder(@Nullable Character emptySlotPlaceholder) {
+        return this;
     }
 
     public boolean isForbidInputWhenFilled() {
         return forbidInputWhenFilled;
     }
 
-    public void setForbidInputWhenFilled(boolean forbidInputWhenFilled) {
+    public MaskDescriptor setForbidInputWhenFilled(boolean forbidInputWhenFilled) {
         this.forbidInputWhenFilled = forbidInputWhenFilled;
+        return this;
     }
 
     public boolean isHideHardcodedHead() {
         return hideHardcodedHead;
     }
 
-    public void setHideHardcodedHead(boolean hideHardcodedHead) {
+    public MaskDescriptor setHideHardcodedHead(boolean hideHardcodedHead) {
         this.hideHardcodedHead = hideHardcodedHead;
+        return this;
     }
 
     @Override
@@ -234,10 +271,8 @@ public class MaskDescriptor implements Serializable, Parcelable {
         dest.writeString(this.rawMask);
         dest.writeString(this.initialValue);
         dest.writeByte(this.terminated ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.showEmptySlots ? (byte) 1 : (byte) 0);
         dest.writeByte(this.forbidInputWhenFilled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.hideHardcodedHead ? (byte) 1 : (byte) 0);
-        dest.writeSerializable(this.emptySlotPlaceholder);
     }
 
     public static final Creator<MaskDescriptor> CREATOR = new Creator<MaskDescriptor>() {
@@ -260,14 +295,12 @@ public class MaskDescriptor implements Serializable, Parcelable {
         MaskDescriptor that = (MaskDescriptor) o;
 
         if (terminated != that.terminated) return false;
-        if (showEmptySlots != that.showEmptySlots) return false;
         if (forbidInputWhenFilled != that.forbidInputWhenFilled) return false;
         if (hideHardcodedHead != that.hideHardcodedHead) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(slots, that.slots)) return false;
         if (rawMask != null ? !rawMask.equals(that.rawMask) : that.rawMask != null) return false;
-        if (initialValue != null ? !initialValue.equals(that.initialValue) : that.initialValue != null)
-            return false;
-        return emptySlotPlaceholder != null ? emptySlotPlaceholder.equals(that.emptySlotPlaceholder) : that.emptySlotPlaceholder == null;
+        return initialValue != null ? initialValue.equals(that.initialValue) : that.initialValue == null;
 
     }
 
@@ -277,10 +310,8 @@ public class MaskDescriptor implements Serializable, Parcelable {
         result = 31 * result + (rawMask != null ? rawMask.hashCode() : 0);
         result = 31 * result + (initialValue != null ? initialValue.hashCode() : 0);
         result = 31 * result + (terminated ? 1 : 0);
-        result = 31 * result + (showEmptySlots ? 1 : 0);
         result = 31 * result + (forbidInputWhenFilled ? 1 : 0);
         result = 31 * result + (hideHardcodedHead ? 1 : 0);
-        result = 31 * result + (emptySlotPlaceholder != null ? emptySlotPlaceholder.hashCode() : 0);
         return result;
     }
 
@@ -300,7 +331,7 @@ public class MaskDescriptor implements Serializable, Parcelable {
         for (Slot slot : slots) {
             Character value = slot.getValue();
             if (value == null) {
-                value = emptySlotPlaceholder == null ? Slot.PLACEHOLDER_DEFAULT : emptySlotPlaceholder;
+                value = Slot.PLACEHOLDER_DEFAULT;
             }
 
             result.append(value);

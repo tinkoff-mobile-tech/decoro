@@ -47,12 +47,18 @@ public class UnderscoreDigitSlotsParser implements SlotsParser {
 
     protected Slot slotFromChar(final char character) {
         if (character == SLOT_STUB) {
-            return PredefinedSlots.digit();
+            return slotFromUnderscoreCharacter();
         }
 
         return slotFromNonUnderscoredChar(character);
     }
 
+    @NonNull
+    protected Slot slotFromUnderscoreCharacter() {
+        return PredefinedSlots.digit();
+    }
+
+    @NonNull
     protected Slot slotFromNonUnderscoredChar(char character) {
         return PredefinedSlots.hardcodedSlot(character);
     }

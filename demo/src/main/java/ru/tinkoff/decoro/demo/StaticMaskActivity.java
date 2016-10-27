@@ -21,11 +21,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskDescriptor;
+import ru.tinkoff.decoro.MaskImpl;
+import ru.tinkoff.decoro.slots.PredefinedSlots;
+import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.FormatWatcherImpl;
 
 /**
@@ -49,13 +54,21 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
 
         dataEdit = (EditText) findViewById(R.id.editData);
 
-        formatWatcher = new FormatWatcherImpl(MaskDescriptor.emptyMask().withTermination(false));
+        formatWatcher = new FormatWatcherImpl(MaskDescriptor.emptyMask().setTerminated(false));
         formatWatcher.installOn(dataEdit);
 
         maskPreviewView = (TextView) findViewById(R.id.textMaskPreview);
         maskPreviewView.setText(getString(R.string.mask_preview, ""));
 
         findViewById(R.id.buttonMask).setOnClickListener(this);
+
+        final Mask mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        mask.setPlaceholder('*');
+        mask.setShowingEmptySlots(true);
+        Log.d("Mask", mask.toString());
+
+        mask.insertFront("999");
+        Log.d("Mask", mask.toString());
     }
 
     @Override
@@ -66,7 +79,7 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onMaskSelected(@NonNull MaskDescriptor maskDescriptor, @NonNull String title) {
-        formatWatcher.changeMask(maskDescriptor.withInitialValue(dataEdit.getText().toString()));
+        formatWatcher.changeMask(maskDescriptor.setInitialValue(dataEdit.getText().toString()));
         maskPreviewView.setText(getString(R.string.mask_preview,maskDescriptor.toString()));
     }
 }

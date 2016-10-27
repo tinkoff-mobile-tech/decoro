@@ -28,6 +28,8 @@ import ru.tinkoff.decoro.slots.SlotValidators;
  */
 public class PhoneNumberUnderscoreSlotsParser extends UnderscoreDigitSlotsParser {
 
+    private static final char PLUS_SIGN = '+';
+
     private int rule;
 
     @NonNull
@@ -40,7 +42,8 @@ public class PhoneNumberUnderscoreSlotsParser extends UnderscoreDigitSlotsParser
     @Override
     protected Slot slotFromNonUnderscoredChar(char character) {
         if (!Character.isDigit(character)) {
-            return PredefinedSlots.hardcodedSlot(character);
+            final Slot hardcoded = PredefinedSlots.hardcodedSlot(character);
+            return character == PLUS_SIGN ? hardcoded : hardcoded.withTags(Slot.TAG_DECORATION);
         }
 
         final Slot slot = new Slot(rule, character, SlotValidatorSet.setOf(new SlotValidators.DigitValidator()));
@@ -48,5 +51,4 @@ public class PhoneNumberUnderscoreSlotsParser extends UnderscoreDigitSlotsParser
 
         return slot;
     }
-
 }

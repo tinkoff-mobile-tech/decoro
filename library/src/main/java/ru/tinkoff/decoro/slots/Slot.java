@@ -291,6 +291,7 @@ public class Slot implements Serializable, Parcelable {
         return this;
     }
 
+
     public boolean hasTag(Integer tag) {
         if (tag == null) {
             return false;
