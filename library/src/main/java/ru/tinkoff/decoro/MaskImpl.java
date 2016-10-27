@@ -330,7 +330,7 @@ public class MaskImpl implements Mask {
      * symbols (at the end of user's input) should be shown. In most cases it should not. The only
      * case when they are visible - buffer starts with them and deletion was inside them.
      *
-     * @param cursorPosition from where to start deletion
+     * @param position from where to start deletion
      * @param count    number of  symbols to delete.
      * @return new cursor position after deletion
      */
@@ -351,29 +351,25 @@ public class MaskImpl implements Mask {
             cursorPosition--;
         }
 
-        trimTail();
+        cursorPosition++;
 
-        int tmpPosition = cursorPosition;
+        trimTail();
 
         // We could remove a symbol before a sequence of hardcoded characters
         // that are now tail. It this case our cursor index will point at non printable
         // character. To avoid this find next not-hardcoded symbol to the left
-        Slot slot = getSlot(tmpPosition);
-        while (slot != null && slot.hardcoded() && tmpPosition > 0) {
+        int tmpPosition = cursorPosition;
+        Slot slot;
+        do {
             slot = getSlot(--tmpPosition);
-            if (slot != null) {
-                showHardcodedTail = !slot.anyInputToTheRight();
-            }
-        }
+        } while (slot != null && slot.hardcoded() && tmpPosition > 0);
 
-        // check if we've reached begin of the string
-        // this can happen not only because we've been 'deleting' hardcoded characters
-        // at he begin of the string.
-        if (tmpPosition <= 0) {
-            showHardcodedTail = !hideHardcodedHead;
-        }
+        // show hardcoded tail only is this tail is hardcode head and hideHardcodedHead is on
+        showHardcodedTail = tmpPosition <= 0 && !hideHardcodedHead;
 
-        cursorPosition++;
+        if (tmpPosition > 0) {
+            cursorPosition = tmpPosition + 1;
+        }
 
         return (cursorPosition >= 0 && cursorPosition <= size) ? cursorPosition : 0;
     }
