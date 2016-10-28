@@ -75,6 +75,12 @@ formatWatcher.installOn(editText); // install on any TextView
 
 ![sample static][img sample dynamic]
 
+# Миграция
+
+В версии 1.1.0 был переименован класс `FormatWatcherImpl` -> `DescriptorFormatWatcher`.
+Также в 1.1.0 появился класс `MaskFormatWatcher`, который предоставляет более явный и чистый API для
+форматирования "на лету".
+
 Больше примеров, возможностей и деталей можно найти [в нашей wiki][details wiki].
 
 [maven]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ru.tinkoff.decoro%22%20
