@@ -3,7 +3,7 @@
 Decoro
 ===========
 
-Библиотека предназначена для автоматического форматирования текста по заданным правилам.
+Android библиотека, предназначеная для автоматического форматирования текста по заданным правилам.
 
 # Установка
 
@@ -48,9 +48,9 @@ System.out.println(mask.toString()); // 999 5554433
 
 ##### Пример 4. Использование заранее опредленной маски
 ```Java
-EditText editText = (EditText) findViewById(R.id.editCustom);
-FormatWatcher watcher = new DescriptorFormatWatcher(MaskDescriptor.ofSlots(PredefinedSlots.CARD_NUMBER_USUAL));
-watcher.installOn(editText);
+Mask mask = MaskImpl.createTerminated(PredefinedSlots.CARD_NUMBER_USUAL);
+FormatWatcher watcher = new MaskFormatWatcher(mask);
+watcher.installOn(editText); // install on any TextView
 ```
 
 ![sample static][img sample static]
@@ -68,12 +68,9 @@ PredefinedSlots.MASKABLE_CARD_NUMBER_MAESTRO  // Hомер карты в фор�
 
 ##### Пример 5. Использование произвольной маски
 ```Java
-final EditText editText = (EditText) findViewById(R.id.editCustom);
-FormatWatcher formatWatcher = new DescriptorFormatWatcher(
-    new UnderscoreDigitSlotsParser(),
-    MaskDescriptor.ofRawMask("___ ___ ___", true)
-);
-formatWatcher.installOn(editText);
+Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___ ___ ___");
+FormatWatcher formatWatcher = new MaskFormatWatcher(MaskImpl.createTerminated(slots));
+formatWatcher.installOn(editText); // install on any TextView
 ```
 
 ![sample static][img sample dynamic]

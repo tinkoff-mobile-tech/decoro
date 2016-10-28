@@ -16,6 +16,7 @@
 
 package ru.tinkoff.decoro.watchers;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 
 import java.util.Iterator;
@@ -138,4 +139,31 @@ class UnmodifiableMask implements Mask {
     public Iterator<Slot> iterator() {
         return delegate == null ? null : delegate.iterator();
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.delegate, flags);
+    }
+
+    protected UnmodifiableMask(Parcel in) {
+        this.delegate = in.readParcelable(Mask.class.getClassLoader());
+    }
+
+    public static final Creator<UnmodifiableMask> CREATOR = new Creator<UnmodifiableMask>() {
+        @Override
+        public UnmodifiableMask createFromParcel(Parcel source) {
+            return new UnmodifiableMask(source);
+        }
+
+        @Override
+        public UnmodifiableMask[] newArray(int size) {
+            return new UnmodifiableMask[size];
+        }
+    };
 }
