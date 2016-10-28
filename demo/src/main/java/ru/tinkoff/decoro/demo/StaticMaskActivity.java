@@ -35,9 +35,8 @@ import ru.tinkoff.decoro.watchers.DescriptorFormatWatcher;
 /**
  * @author Mikhail Artemev
  */
-
 public class StaticMaskActivity extends AppCompatActivity implements View.OnClickListener,
-        MaskSelectorDialog.OnMaskSelectedListener{
+        MaskSelectorDialog.OnMaskSelectedListener {
 
     private static final String MASK_DIALOG_TAG = "mask-dialog";
 
@@ -79,6 +78,6 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onMaskSelected(@NonNull MaskDescriptor maskDescriptor, @NonNull String title) {
         formatWatcher.changeMask(maskDescriptor.setInitialValue(dataEdit.getText().toString()));
-        maskPreviewView.setText(getString(R.string.mask_preview,maskDescriptor.toString()));
+        maskPreviewView.setText(getString(R.string.mask_preview, maskDescriptor.toString()));
     }
 }

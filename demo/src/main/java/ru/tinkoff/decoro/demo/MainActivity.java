@@ -43,10 +43,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final Class<? extends Activity> activityClass;
         switch (v.getId()) {
             case R.id.btnCustomMask:
-                activityClass  = CustomMaskActivity.class;
+                activityClass = CustomMaskActivity.class;
                 break;
             case R.id.btnStaticMask:
-                activityClass  = StaticMaskActivity.class;
+                activityClass = StaticMaskActivity.class;
                 break;
             default:
                 throw new IllegalStateException();
