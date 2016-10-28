@@ -10,7 +10,6 @@ import ru.tinkoff.decoro.slots.Slot;
 /**
  * @author Mikhail Artemyev
  */
-
 class SlotsList implements Iterable<Slot> {
 
     private int size = 0;
@@ -104,18 +103,6 @@ class SlotsList implements Iterable<Slot> {
 
         return result;
     }
-
-//    public int indexOf(Slot slot){
-//        int index = 0;
-//        for(Slot current: this) {
-//            if (current == slot) {
-//                return index;
-//            }
-//            index++;
-//        }
-//
-//        return -1;
-//    }
 
     /**
      * Inserts a slot on a specified position

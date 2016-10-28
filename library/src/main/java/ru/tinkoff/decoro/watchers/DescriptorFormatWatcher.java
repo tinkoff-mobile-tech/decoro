@@ -27,16 +27,16 @@ import ru.tinkoff.decoro.parser.SlotsParser;
 /**
  * @author Mikhail Artemev
  */
-public class FormatWatcherImpl extends FormatWatcher {
+public class DescriptorFormatWatcher extends FormatWatcher {
 
     private SlotsParser slotsParser;
     private MaskDescriptor maskDescriptor;
 
-    public FormatWatcherImpl(@Nullable SlotsParser slotsParser) {
+    public DescriptorFormatWatcher(@Nullable SlotsParser slotsParser) {
         this.slotsParser = slotsParser;
     }
 
-    public FormatWatcherImpl(@Nullable SlotsParser slotsParser, @Nullable MaskDescriptor maskDescriptor) {
+    public DescriptorFormatWatcher(@Nullable SlotsParser slotsParser, @Nullable MaskDescriptor maskDescriptor) {
         this.slotsParser = slotsParser;
         this.maskDescriptor = maskDescriptor;
         if (maskDescriptor != null) {
@@ -44,11 +44,11 @@ public class FormatWatcherImpl extends FormatWatcher {
         }
     }
 
-    public FormatWatcherImpl() {
+    public DescriptorFormatWatcher() {
         this(null, MaskDescriptor.emptyMask());
     }
 
-    public FormatWatcherImpl(@Nullable MaskDescriptor maskDescriptor) {
+    public DescriptorFormatWatcher(@Nullable MaskDescriptor maskDescriptor) {
         this(null, maskDescriptor);
     }
 

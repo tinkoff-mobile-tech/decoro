@@ -30,8 +30,7 @@ import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskDescriptor;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
-import ru.tinkoff.decoro.watchers.FormatWatcher;
-import ru.tinkoff.decoro.watchers.FormatWatcherImpl;
+import ru.tinkoff.decoro.watchers.DescriptorFormatWatcher;
 
 /**
  * @author Mikhail Artemev
@@ -45,7 +44,7 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
     private EditText dataEdit;
     private TextView maskPreviewView;
 
-    private FormatWatcherImpl formatWatcher;
+    private DescriptorFormatWatcher formatWatcher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class StaticMaskActivity extends AppCompatActivity implements View.OnClic
 
         dataEdit = (EditText) findViewById(R.id.editData);
 
-        formatWatcher = new FormatWatcherImpl(MaskDescriptor.emptyMask().setTerminated(false));
+        formatWatcher = new DescriptorFormatWatcher(MaskDescriptor.emptyMask().setTerminated(false));
         formatWatcher.installOn(dataEdit);
 
         maskPreviewView = (TextView) findViewById(R.id.textMaskPreview);

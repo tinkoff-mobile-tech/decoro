@@ -25,14 +25,11 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import ru.tinkoff.decoro.Mask;
-import ru.tinkoff.decoro.MaskDescriptor;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.parser.SlotsParser;
 import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
 import ru.tinkoff.decoro.slots.Slot;
-import ru.tinkoff.decoro.watchers.FormatWatcherImpl;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 /**
