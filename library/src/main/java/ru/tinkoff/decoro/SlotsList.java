@@ -1,5 +1,7 @@
 package ru.tinkoff.decoro;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.lang.reflect.Array;
@@ -10,7 +12,7 @@ import ru.tinkoff.decoro.slots.Slot;
 /**
  * @author Mikhail Artemyev
  */
-class SlotsList implements Iterable<Slot> {
+class SlotsList implements Iterable<Slot>, Parcelable {
 
     private int size = 0;
 
@@ -26,6 +28,12 @@ class SlotsList implements Iterable<Slot> {
             return list;
         }
 
+        linkSlots(slots, list);
+
+        return list;
+    }
+
+    private static void linkSlots(@NonNull Slot[] slots, SlotsList list) {
         list.firstSlot = new Slot(slots[0]);
         Slot prev = list.firstSlot;
 
@@ -45,8 +53,6 @@ class SlotsList implements Iterable<Slot> {
                 list.lastSlot = next;
             }
         }
-
-        return list;
     }
 
     public SlotsList() {
@@ -286,6 +292,40 @@ class SlotsList implements Iterable<Slot> {
 
         return false;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.size);
+        if (size > 0) {
+            dest.writeArray(toArray());
+        }
+    }
+
+    protected SlotsList(Parcel in) {
+        this.size = in.readInt();
+        if (size > 0) {
+            Slot[] slots = new Slot[this.size];
+            in.readArray(Slot.class.getClassLoader());
+            linkSlots(slots, this);
+        }
+    }
+
+    public static final Creator<SlotsList> CREATOR = new Creator<SlotsList>() {
+        @Override
+        public SlotsList createFromParcel(Parcel source) {
+            return new SlotsList(source);
+        }
+
+        @Override
+        public SlotsList[] newArray(int size) {
+            return new SlotsList[size];
+        }
+    };
 
     private static class SlotsIterator implements Iterator<Slot> {
 

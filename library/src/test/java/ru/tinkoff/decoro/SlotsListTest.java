@@ -42,7 +42,7 @@ public class SlotsListTest {
 
     @Test(expected = NullPointerException.class)
     public void copyFails() throws Exception {
-        new SlotsList(null);
+        new SlotsList((SlotsList) null);
     }
 
     @Test

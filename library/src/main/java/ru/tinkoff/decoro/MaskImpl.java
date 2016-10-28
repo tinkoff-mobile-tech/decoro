@@ -16,6 +16,7 @@
 
 package ru.tinkoff.decoro;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -518,5 +519,43 @@ public class MaskImpl implements Mask {
         // flag showing is there any input-available slots that cannot accept desired character
         boolean nonHarcodedSlotSkipped;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte(this.terminated ? (byte) 1 : (byte) 0);
+        dest.writeSerializable(this.placeholder);
+        dest.writeByte(this.showingEmptySlots ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.forbidInputWhenFilled ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hideHardcodedHead ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.showHardcodedTail ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.slots, flags);
+    }
+
+    protected MaskImpl(Parcel in) {
+        this.terminated = in.readByte() != 0;
+        this.placeholder = (Character) in.readSerializable();
+        this.showingEmptySlots = in.readByte() != 0;
+        this.forbidInputWhenFilled = in.readByte() != 0;
+        this.hideHardcodedHead = in.readByte() != 0;
+        this.showHardcodedTail = in.readByte() != 0;
+        this.slots = in.readParcelable(SlotsList.class.getClassLoader());
+    }
+
+    public static final Creator<MaskImpl> CREATOR = new Creator<MaskImpl>() {
+        @Override
+        public MaskImpl createFromParcel(Parcel source) {
+            return new MaskImpl(source);
+        }
+
+        @Override
+        public MaskImpl[] newArray(int size) {
+            return new MaskImpl[size];
+        }
+    };
 }
 
