@@ -30,11 +30,11 @@ import ru.tinkoff.decoro.slots.Slot;
  */
 public class MaskImpl implements Mask {
 
-    public static Mask createTerminated(@NonNull final Slot[] slots) {
+    public static MaskImpl createTerminated(@NonNull final Slot[] slots) {
         return new MaskImpl(slots, true);
     }
 
-    public static Mask createNonTerminated(@NonNull final Slot[] slots) {
+    public static MaskImpl createNonTerminated(@NonNull final Slot[] slots) {
         return new MaskImpl(slots, false);
     }
 
@@ -43,9 +43,9 @@ public class MaskImpl implements Mask {
     // Members available outside the Mask
     private boolean terminated = true;
     private Character placeholder;
-    private boolean showingEmptySlots = false;
-    private boolean forbidInputWhenFilled = false;
-    private boolean hideHardcodedHead = false;
+    private boolean showingEmptySlots;
+    private boolean forbidInputWhenFilled;
+    private boolean hideHardcodedHead;
 
     // Inner use only
     private boolean showHardcodedTail = true;
@@ -56,7 +56,7 @@ public class MaskImpl implements Mask {
 
         this.slots = SlotsList.ofArray(slots);
 
-        if (this.slots.getSize() == 1) {
+        if (this.slots.size() == 1) {
             if (!terminated) {
                 extendTail(1);
             }
@@ -64,7 +64,11 @@ public class MaskImpl implements Mask {
     }
 
     public MaskImpl(@NonNull MaskImpl mask) {
-        this.terminated = mask.terminated;
+        this(mask, mask.terminated);
+    }
+
+    public MaskImpl(@NonNull MaskImpl mask, boolean terminated) {
+        this.terminated = terminated;
         this.placeholder = mask.placeholder;
         this.showingEmptySlots = mask.showingEmptySlots;
         this.forbidInputWhenFilled = mask.forbidInputWhenFilled;
@@ -189,6 +193,11 @@ public class MaskImpl implements Mask {
         } while (nextSlot != null);
 
         return true;
+    }
+
+    public void clear() {
+        slots.clear();
+        trimTail();
     }
 
     /**
@@ -358,12 +367,12 @@ public class MaskImpl implements Mask {
             cursorPosition = tmpPosition + 1;
         }
 
-        return (cursorPosition >= 0 && cursorPosition <= slots.getSize()) ? cursorPosition : 0;
+        return (cursorPosition >= 0 && cursorPosition <= slots.size()) ? cursorPosition : 0;
     }
 
     @Override
     public int getSize() {
-        return slots.getSize();
+        return slots.size();
     }
 
     @Override
@@ -416,6 +425,10 @@ public class MaskImpl implements Mask {
         this.forbidInputWhenFilled = forbidInputWhenFilled;
     }
 
+    public boolean isTerminated() {
+        return terminated;
+    }
+
     /**
      * Looks for a slot to insert {@code value}. Search moves to the right from the specified one
      * (including it). While searching it checks whether the're any non-hardcoded slots that cannot
@@ -451,7 +464,7 @@ public class MaskImpl implements Mask {
 
         while (--count >= 0) {
             // create a copy of the last slot and make it the last one
-            final Slot inserted = slots.insertSlotAt(slots.getSize(), slots.getLastSlot());
+            final Slot inserted = slots.insertSlotAt(slots.size(), slots.getLastSlot());
             inserted.withTags(TAG_EXTENSION);
         }
     }
@@ -464,7 +477,7 @@ public class MaskImpl implements Mask {
         Slot currentSlot = slots.getLastSlot();
         Slot prevSlot = currentSlot.getPrevSlot();
         while (isAllowedToRemoveSlot(currentSlot, prevSlot)) {
-            slots.removeSlotAt(slots.getSize() - 1);
+            slots.removeSlotAt(slots.size() - 1);
             currentSlot = prevSlot;
             prevSlot = prevSlot.getPrevSlot();
         }

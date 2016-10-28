@@ -210,4 +210,8 @@ public class MaskImplTest {
         assertEquals("+359 ", phoneMask.toString());
     }
 
+    @Test
+    public void clear() {
+
+    }
 }

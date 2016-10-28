@@ -2,6 +2,7 @@ package ru.tinkoff.decoro;
 
 import android.support.annotation.NonNull;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 
 import ru.tinkoff.decoro.slots.Slot;
@@ -104,6 +105,18 @@ class SlotsList implements Iterable<Slot> {
         return result;
     }
 
+//    public int indexOf(Slot slot){
+//        int index = 0;
+//        for(Slot current: this) {
+//            if (current == slot) {
+//                return index;
+//            }
+//            index++;
+//        }
+//
+//        return -1;
+//    }
+
     /**
      * Inserts a slot on a specified position
      *
@@ -163,7 +176,7 @@ class SlotsList implements Iterable<Slot> {
     }
 
     public Slot removeSlot(final Slot slotToRemove) {
-        if (slotToRemove == null) {
+        if (slotToRemove == null || !contains(slotToRemove)) {
             return null;
         }
 
@@ -187,10 +200,53 @@ class SlotsList implements Iterable<Slot> {
         return slotToRemove;
     }
 
+    public void clear() {
+        if (isEmpty()) {
+            return;
+        }
+
+        // iterate back because by default slots will try to pull new value from next slot
+        // when someone try to remove their value
+        Slot slot = lastSlot;
+        while (slot != null) {
+            slot.setValue(null);
+            slot = slot.getPrevSlot();
+        }
+    }
+
     @Override
     public Iterator<Slot> iterator() {
         return new SlotsIterator(firstSlot);
     }
+
+    @NonNull
+    public Slot[] toArray() {
+        if (isEmpty()) {
+            return new Slot[0];
+        }
+
+        return toArray(new Slot[size()]);
+    }
+
+    @NonNull
+    public <T> T[] toArray(@NonNull T[] array) {
+        if (array == null || array.length < size) {
+            array = (T[]) Array.newInstance(array.getClass().getComponentType(), size);
+        }
+
+        int index = 0;
+        Object[] result = array;
+        for (Slot slot : this) {
+            result[index++] = slot;
+        }
+
+        return array;
+    }
+
+    public boolean add(Slot slot) {
+        return insertSlotAt(size, slot) == slot;
+    }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -198,7 +254,7 @@ class SlotsList implements Iterable<Slot> {
         if (obj == null || getClass() != obj.getClass()) return false;
 
         final SlotsList list = (SlotsList) obj;
-        if (list.getSize() != getSize()) return false;
+        if (list.size() != size()) return false;
 
         final Iterator<Slot> ourIterator = iterator();
         for (Slot otherSlot : list) {
@@ -214,12 +270,8 @@ class SlotsList implements Iterable<Slot> {
         return size == 0;
     }
 
-    public int getSize() {
+    public int size() {
         return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 
     public Slot getFirstSlot() {
@@ -236,6 +288,16 @@ class SlotsList implements Iterable<Slot> {
 
     public void setLastSlot(Slot lastSlot) {
         this.lastSlot = lastSlot;
+    }
+
+    private boolean contains(Slot o) {
+        for (Slot slot : this) {
+            if (slot == o) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static class SlotsIterator implements Iterator<Slot> {
