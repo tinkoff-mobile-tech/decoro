@@ -7,7 +7,7 @@ Android library designed for automatic formatting of text input by custom rules.
 
 # Installation
 
-Add to build.gradle of your app module:
+Add to the `build.gradle` of your app module:
 ```Groovy
 dependencies {
     compile "ru.tinkoff.decoro:decoro:1.1.0"
@@ -16,7 +16,7 @@ dependencies {
 
 # Usage
 
-### One-time formatting
+### `String` formatting
 In examples below the content of the String `text` will be formatted according to a _mask_.
 
 ##### Example 1. Using predefined mask
@@ -43,7 +43,7 @@ mask.insertFront("9995554433");
 System.out.println(mask.toString()); // 999 5554433
 ```
 
-### Formatting "on the flight"
+### Formatting "on the fly"
 In examples below all the user's text input to `EditText` will be formatted according to a mask.
 
 ##### Example 4. Using predefined mask
