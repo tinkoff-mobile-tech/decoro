@@ -3,31 +3,31 @@
 Decoro
 ===========
 
-Android библиотека, предназначеная для автоматического форматирования текста по заданным правилам.
+Android library designed for automatic formatting of text input by custom rules.
 
-# Установка
+# Installation
 
-Добавьте в build.gradle вашего проекта:
+Add to the `build.gradle` of your app module:
 ```Groovy
 dependencies {
     compile "ru.tinkoff.decoro:decoro:1.1.0"
 }
 ```
 
-# Использование
+# Usage
 
-### Одиночное форматирование
-В примерах ниже содержимое строки `text` будет приведено к формату, опреленному _маской_.
+### `String` formatting
+In examples below the content of the String `text` will be formatted according to a _mask_.
 
-##### Пример 1. Использование заранее опредленной маски
+##### Example 1. Using predefined mask
 ```Java
 Mask mask = new MaskImpl(PredefinedSlots.RUS_PHONE_NUMBER, true);
 mask.insertFront("9995554433");
 System.out.println(mask.toString()); // +7 (999) 555-44-33
 ```
 
-##### Использование произвольной маски
-Пример 2:
+##### Using custom mask
+Example 2:
 ```Java
 Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___ ___");
 Mask mask = MaskImpl.createTerminated(slots); // 'terminated' mask
@@ -35,7 +35,7 @@ mask.insertFront("9995554433");
 System.out.println(mask.toString()); // 999 555
 ```
 
-Пример 3:
+Example 3:
 ```Java
 Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___ ___");
 Mask mask = MaskImpl.createNonTeminated(slots); // 'non-terminated' mask
@@ -43,10 +43,10 @@ mask.insertFront("9995554433");
 System.out.println(mask.toString()); // 999 5554433
 ```
 
-### Форматирование "на лету"
-В данных примерах весь пользовательский ввод в `EditText` будет приведен к формату, определенному _маской_.
+### Formatting "on the fly"
+In examples below all the user's text input to `EditText` will be formatted according to a mask.
 
-##### Пример 4. Использование заранее опредленной маски
+##### Example 4. Using predefined mask
 ```Java
 Mask mask = MaskImpl.createTerminated(PredefinedSlots.CARD_NUMBER_USUAL);
 FormatWatcher watcher = new MaskFormatWatcher(mask);
@@ -55,18 +55,18 @@ watcher.installOn(editText); // install on any TextView
 
 ![sample static][img sample static]
 
-##### Маски ввода в составе модуля:
+##### Masks available out of the box:
 ```Java
-PredefinedSlots.SINGLE_SLOT                   // Любой символ
-PredefinedSlots.RUS_PHONE_NUMBER              // Телефонный номер в формате +7 (___) ___-__-__ (только цифры)
-PredefinedSlots.RUS_PASSPORT                  // Серия и номер паспорта в формате ____ ______  (только цифры)
-PredefinedSlots.CARD_NUMBER_USUAL             // Hомер карты в формате ____ ____ ____ ____ (только цифры)
-PredefinedSlots.MASKABLE_CARD_NUMBER_USUAL    // Hомер карты в формате ____ ____ ____ ____ (цифры и символы 'X', 'x', '*')
-PredefinedSlots.CARD_NUMBER_MAESTRO           // Hомер карты в формате ________ ____ (только цифры)
-PredefinedSlots.MASKABLE_CARD_NUMBER_MAESTRO  // Hомер карты в формате ________ ____ (цифры и символы 'X', 'x', '*')
+PredefinedSlots.SINGLE_SLOT                   // Any character
+PredefinedSlots.RUS_PHONE_NUMBER              // Russian phone number formatted as +7 (___) ___-__-__ (digits only)
+PredefinedSlots.RUS_PASSPORT                  // Series and number of russian passport formatted as ____ ______  (digits only)
+PredefinedSlots.CARD_NUMBER_USUAL             // Credit card number formatted as ____ ____ ____ ____ (digits only)
+PredefinedSlots.MASKABLE_CARD_NUMBER_USUAL    // Credit card number formatted as ____ ____ ____ ____ (digits and chars 'X', 'x', '*')
+PredefinedSlots.CARD_NUMBER_MAESTRO           // Credit card number formatted as ________ ____ (digits only)
+PredefinedSlots.MASKABLE_CARD_NUMBER_MAESTRO  // Credit card number formatted as ________ ____ (digits and chars 'X', 'x', '*')
 ```
 
-##### Пример 5. Использование произвольной маски
+##### Example 5. Using custom mask
 ```Java
 Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___ ___ ___");
 FormatWatcher formatWatcher = new MaskFormatWatcher(MaskImpl.createTerminated(slots));
@@ -75,13 +75,14 @@ formatWatcher.installOn(editText); // install on any TextView
 
 ![sample static][img sample dynamic]
 
-# Миграция
+# Migration
 
-В версии 1.1.0 был переименован класс `FormatWatcherImpl` -> `DescriptorFormatWatcher`.
-Также в 1.1.0 появился класс `MaskFormatWatcher`, который предоставляет более явный и чистый API для
-форматирования "на лету".
+In version 1.1.0 class `FormatWatcherImpl` was renamed to `DescriptorFormatWatcher`.
+Also this version introduced `MaskFormatWatcher` that offers more clean API than `DescriptorFormatWatcher`.
 
-Больше примеров, возможностей и деталей можно найти [в нашей wiki][details wiki].
+# References
+
+More examples and details can be found [in our wiki][details wiki] (in Russian yet).
 
 [maven]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ru.tinkoff.decoro%22%20
 [details wiki]: https://github.com/TinkoffCreditSystems/decoro/wiki
