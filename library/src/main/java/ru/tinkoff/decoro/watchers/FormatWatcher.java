@@ -24,8 +24,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
-
 import ru.tinkoff.decoro.FormattedTextChangeListener;
 import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskFactory;
@@ -246,6 +244,10 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         textBeforeChange = null;
     }
 
+    /**
+     * @return Unmodifiable wrapper around inner mask. It allows to obtain inner mask statem
+     * but not to change it.
+     */
     public Mask getMask() {
         return new UnmodifiableMask(mask);
     }

@@ -16,6 +16,7 @@
 
 package ru.tinkoff.decoro;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -30,7 +31,7 @@ import ru.tinkoff.decoro.slots.Slot;
  *
  * @author Mikhail Artemev
  */
-public interface Mask extends Iterable<Slot> {
+public interface Mask extends Iterable<Slot>, Parcelable {
 
     /**
      * @return mask contents without <b>decoration</b> characters.

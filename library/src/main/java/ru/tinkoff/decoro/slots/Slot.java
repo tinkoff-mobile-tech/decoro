@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * @author Mikhail Artemev
  */
-public class Slot implements Serializable, Parcelable {
+public final class Slot implements Serializable, Parcelable {
 
     /**
      * On input current value of a slot will be replaced.

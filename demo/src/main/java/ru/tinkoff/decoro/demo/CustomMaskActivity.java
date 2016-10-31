@@ -17,6 +17,7 @@
 package ru.tinkoff.decoro.demo;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -24,9 +25,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import ru.tinkoff.decoro.MaskDescriptor;
+import ru.tinkoff.decoro.MaskImpl;
+import ru.tinkoff.decoro.parser.SlotsParser;
 import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
-import ru.tinkoff.decoro.watchers.FormatWatcherImpl;
+import ru.tinkoff.decoro.slots.PredefinedSlots;
+import ru.tinkoff.decoro.slots.Slot;
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 /**
  * @author Mikhail Artemev
@@ -36,24 +40,30 @@ public class CustomMaskActivity extends AppCompatActivity {
 
     private EditText dataEdit;
 
-    private FormatWatcherImpl formatWatcher;
+    private MaskFormatWatcher formatWatcher;
+    private SlotsParser slotsParser = new UnderscoreDigitSlotsParser();
 
     private TextWatcher maskTextWatcher = new TextWatcherImpl() {
         @Override
         public void afterTextChanged(Editable s) {
-            final MaskDescriptor maskDescriptor;
+            final MaskImpl maskDescriptor;
 
             if (TextUtils.isEmpty(s)) {
-                maskDescriptor = MaskDescriptor.emptyMask().setTerminated(false);
+                maskDescriptor = createEmptyMask();
             } else {
-                maskDescriptor = MaskDescriptor.ofRawMask(s.toString())
-                        .setInitialValue(dataEdit.getText().toString());
+                maskDescriptor = MaskImpl.createTerminated(slotsParser.parseSlots(s.toString()));
+                maskDescriptor.setHideHardcodedHead(false);
+                maskDescriptor.insertFront(dataEdit.getText().toString());
             }
 
-            formatWatcher.changeMask(maskDescriptor);
-
+            formatWatcher.setMask(maskDescriptor);
         }
     };
+
+    @NonNull
+    private MaskImpl createEmptyMask() {
+        return MaskImpl.createNonTerminated(new Slot[]{PredefinedSlots.any()});
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,8 +73,7 @@ public class CustomMaskActivity extends AppCompatActivity {
         EditText maskEdit = (EditText) findViewById(R.id.editMask);
         maskEdit.addTextChangedListener(maskTextWatcher);
 
-        formatWatcher = new FormatWatcherImpl(new UnderscoreDigitSlotsParser(),
-                MaskDescriptor.emptyMask().setTerminated(false));
+        formatWatcher = new MaskFormatWatcher(createEmptyMask());
 
         dataEdit = (EditText) findViewById(R.id.editData);
         formatWatcher.installOn(dataEdit);

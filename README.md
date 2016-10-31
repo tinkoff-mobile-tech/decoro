@@ -3,14 +3,14 @@
 Decoro
 ===========
 
-Библиотека предназначена для автоматического форматирования текста по заданным правилам.
+Android библиотека, предназначеная для автоматического форматирования текста по заданным правилам.
 
 # Установка
 
 Добавьте в build.gradle вашего проекта:
 ```Groovy
 dependencies {
-    compile "ru.tinkoff.decoro:decoro:1.0.3"
+    compile "ru.tinkoff.decoro:decoro:1.1.0"
 }
 ```
 
@@ -48,9 +48,9 @@ System.out.println(mask.toString()); // 999 5554433
 
 ##### Пример 4. Использование заранее опредленной маски
 ```Java
-EditText editText = (EditText) findViewById(R.id.editCustom);
-FormatWatcher watcher = new FormatWatcherImpl(MaskDescriptor.ofSlots(PredefinedSlots.CARD_NUMBER_USUAL));
-watcher.installOn(editText);
+Mask mask = MaskImpl.createTerminated(PredefinedSlots.CARD_NUMBER_USUAL);
+FormatWatcher watcher = new MaskFormatWatcher(mask);
+watcher.installOn(editText); // install on any TextView
 ```
 
 ![sample static][img sample static]
@@ -68,20 +68,23 @@ PredefinedSlots.MASKABLE_CARD_NUMBER_MAESTRO  // Hомер карты в фор�
 
 ##### Пример 5. Использование произвольной маски
 ```Java
-final EditText editText = (EditText) findViewById(R.id.editCustom);
-FormatWatcher formatWatcher = new FormatWatcherImpl(
-    new UnderscoreDigitSlotsParser(),
-    MaskDescriptor.ofRawMask("___ ___ ___", true)
-);
-formatWatcher.installOn(editText);
+Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___ ___ ___");
+FormatWatcher formatWatcher = new MaskFormatWatcher(MaskImpl.createTerminated(slots));
+formatWatcher.installOn(editText); // install on any TextView
 ```
 
 ![sample static][img sample dynamic]
+
+# Миграция
+
+В версии 1.1.0 был переименован класс `FormatWatcherImpl` -> `DescriptorFormatWatcher`.
+Также в 1.1.0 появился класс `MaskFormatWatcher`, который предоставляет более явный и чистый API для
+форматирования "на лету".
 
 Больше примеров, возможностей и деталей можно найти [в нашей wiki][details wiki].
 
 [maven]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ru.tinkoff.decoro%22%20
 [details wiki]: https://github.com/TinkoffCreditSystems/decoro/wiki
-[img version shield]: https://img.shields.io/badge/version-1.0.3-blue.svg
+[img version shield]: https://img.shields.io/badge/version-1.1.0-blue.svg
 [img sample static]: https://raw.githubusercontent.com/TinkoffCreditSystems/decoro/master/img/static1.gif
 [img sample dynamic]: https://raw.githubusercontent.com/TinkoffCreditSystems/decoro/master/img/dynamic1.gif

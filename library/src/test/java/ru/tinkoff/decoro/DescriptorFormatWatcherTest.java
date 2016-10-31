@@ -26,7 +26,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import ru.tinkoff.decoro.slots.PredefinedSlots;
-import ru.tinkoff.decoro.watchers.FormatWatcherImpl;
+import ru.tinkoff.decoro.watchers.DescriptorFormatWatcher;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -35,12 +35,12 @@ import static junit.framework.Assert.assertEquals;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-public class FormatWatcherImplTest {
+public class DescriptorFormatWatcherTest {
 
     @Test
     public void getUnformattedString() {
-        FormatWatcherImpl watcher =
-                new FormatWatcherImpl(MaskDescriptor.ofSlots(PredefinedSlots.RUS_PHONE_NUMBER));
+        DescriptorFormatWatcher watcher =
+                new DescriptorFormatWatcher(MaskDescriptor.ofSlots(PredefinedSlots.RUS_PHONE_NUMBER));
 
         assertEquals("+7", watcher.getMask().toUnformattedString());
     }
@@ -48,8 +48,8 @@ public class FormatWatcherImplTest {
     @SuppressLint("SetTextI18n")
     @Test
     public void cursorPosition() {
-        FormatWatcherImpl watcher =
-                new FormatWatcherImpl(MaskDescriptor.ofSlots(PredefinedSlots.RUS_PHONE_NUMBER));
+        DescriptorFormatWatcher watcher =
+                new DescriptorFormatWatcher(MaskDescriptor.ofSlots(PredefinedSlots.RUS_PHONE_NUMBER));
 
         assertEquals(0, watcher.getCursorPosition());
 

@@ -37,7 +37,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-public class MaskTest {
+public class MaskImplTest {
 
     Mask mask;
 
@@ -210,4 +210,8 @@ public class MaskTest {
         assertEquals("+359 ", phoneMask.toString());
     }
 
+    @Test
+    public void clear() {
+
+    }
 }
