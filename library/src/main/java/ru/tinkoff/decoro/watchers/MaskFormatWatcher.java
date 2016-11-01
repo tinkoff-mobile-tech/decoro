@@ -14,7 +14,7 @@ public class MaskFormatWatcher extends FormatWatcher {
     private MaskImpl maskOriginal;
 
     public MaskFormatWatcher(MaskImpl maskOriginal) {
-        this.maskOriginal = maskOriginal;
+        setMask(maskOriginal);
     }
 
     @NonNull
@@ -29,9 +29,6 @@ public class MaskFormatWatcher extends FormatWatcher {
 
     public void setMask(MaskImpl maskOriginal) {
         this.maskOriginal = maskOriginal;
-
-        if (isInstalled()) {
-            refreshMask();
-        }
+        refreshMask();
     }
 }

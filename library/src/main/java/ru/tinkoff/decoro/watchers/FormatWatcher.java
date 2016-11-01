@@ -44,7 +44,7 @@ import ru.tinkoff.decoro.MaskFactory;
  */
 public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 
-    private DiffMeasures diffMeasures;
+    private DiffMeasures diffMeasures = new DiffMeasures();
 
     private CharSequence textBeforeChange;
 
