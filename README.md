@@ -86,6 +86,6 @@ More examples and details can be found [in our wiki][details wiki] (in Russian y
 
 [maven]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ru.tinkoff.decoro%22%20
 [details wiki]: https://github.com/TinkoffCreditSystems/decoro/wiki
-[img version shield]: https://img.shields.io/badge/version-1.1.0-blue.svg
+[img version shield]: https://img.shields.io/badge/version-1.1.1-blue.svg
 [img sample static]: https://raw.githubusercontent.com/TinkoffCreditSystems/decoro/master/img/static1.gif
 [img sample dynamic]: https://raw.githubusercontent.com/TinkoffCreditSystems/decoro/master/img/dynamic1.gif
