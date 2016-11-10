@@ -253,10 +253,6 @@ public class MaskImpl implements Mask {
 
             cursorPosition += slotForInputIndex.indexOffset;
             final Slot slotForInput = slots.getSlot(cursorPosition);
-            if (slotForInput != null && slotForInput == slots.getLastSlot() && !terminated) {
-                // extend mask to fit all VALID input characters (if mask non-terminated)
-                extendTail(slotForInput.getValidators().countValidIn(inStack) + 1);
-            }
 
             if (slotForInput != null) {
                 slotCandidate = slotForInput;
@@ -264,6 +260,10 @@ public class MaskImpl implements Mask {
 
                 cursorPosition += insertOffset;
                 slotCandidate = slots.getSlot(cursorPosition);
+
+                if (!terminated && emptySlotsOnTail() < 1) {
+                    extendTail(1);
+                }
             }
 
         }
@@ -284,6 +284,17 @@ public class MaskImpl implements Mask {
         showHardcodedTail = nextSlot == null || !nextSlot.anyInputToTheRight();
 
         return cursorPosition;
+    }
+
+    private int emptySlotsOnTail() {
+        int count = 0;
+        Slot slot = slots.getLastSlot();
+        while (slot != null && slot.getValue() == null) {
+            count++;
+            slot = slot.getPrevSlot();
+        }
+
+        return count;
     }
 
     /**
@@ -493,6 +504,7 @@ public class MaskImpl implements Mask {
         while (--count >= 0) {
             // create a copy of the last slot and make it the last one
             final Slot inserted = slots.insertSlotAt(slots.size(), slots.getLastSlot());
+            inserted.setValue(null);
             inserted.withTags(TAG_EXTENSION);
         }
     }
