@@ -48,7 +48,7 @@ In examples below all the user's text input to `EditText` will be formatted acco
 
 ##### Example 4. Using predefined mask
 ```Java
-Mask mask = MaskImpl.createTerminated(PredefinedSlots.CARD_NUMBER_USUAL);
+MaskImpl mask = MaskImpl.createTerminated(PredefinedSlots.CARD_NUMBER_USUAL);
 FormatWatcher watcher = new MaskFormatWatcher(mask);
 watcher.installOn(editText); // install on any TextView
 ```
