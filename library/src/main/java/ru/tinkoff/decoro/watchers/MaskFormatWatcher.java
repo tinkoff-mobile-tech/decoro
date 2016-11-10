@@ -6,7 +6,7 @@ import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskImpl;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 
 public class MaskFormatWatcher extends FormatWatcher {

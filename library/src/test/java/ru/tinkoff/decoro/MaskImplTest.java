@@ -33,7 +33,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
