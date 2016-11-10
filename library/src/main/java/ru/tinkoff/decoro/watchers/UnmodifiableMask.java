@@ -62,6 +62,13 @@ class UnmodifiableMask implements Mask {
     }
 
     @Override
+    public void clear() {
+        if (delegate != null) {
+            clear();
+        }
+    }
+
+    @Override
     public int insertAt(int position, CharSequence input, boolean cursorAfterTrailingHardcoded) {
         throw new UnsupportedOperationException();
     }
@@ -133,6 +140,11 @@ class UnmodifiableMask implements Mask {
         if (delegate != null) {
             delegate.setForbidInputWhenFilled(forbidInputWhenFilled);
         }
+    }
+
+    @Override
+    public int findCursorPositionInUnformattedString(int cursorPosition) {
+        return delegate == null ? cursorPosition : delegate.findCursorPositionInUnformattedString(cursorPosition);
     }
 
     @Override

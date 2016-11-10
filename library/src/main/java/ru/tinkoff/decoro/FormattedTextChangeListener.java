@@ -17,13 +17,13 @@
 package ru.tinkoff.decoro;
 
 
+import android.support.annotation.NonNull;
+
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 
 /**
  * @author Mikhail Artemev
  */
 public interface FormattedTextChangeListener {
-    boolean beforeFormatting(String oldValue, String newValue);
-
-    void onTextFormatted(FormatWatcher formatter, String newFormattedText);
+    void onTextFormatted(@NonNull FormatWatcher formatter, @NonNull String newFormattedText);
 }

@@ -31,4 +31,11 @@ public class MaskFormatWatcher extends FormatWatcher {
         this.maskOriginal = maskOriginal;
         refreshMask();
     }
+
+    public void swapMask(MaskImpl newMask) {
+        maskOriginal = new MaskImpl(newMask);
+        maskOriginal.clear();
+
+        refreshMask(newMask.toString());
+    }
 }

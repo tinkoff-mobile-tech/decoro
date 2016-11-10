@@ -63,6 +63,11 @@ public interface Mask extends Iterable<Slot>, Parcelable {
     boolean filled();
 
     /**
+     * Removes user input from this mask.
+     */
+    void clear();
+
+    /**
      * Method insert {@code input} to the buffer. Only validated characters would be inserted.
      * Hardcoded slots are omitted. Method returns new cursor position that is affected by input
      * and {@code cursorAfterTrailingHardcoded} flag. In most cases if input string is followed by
@@ -196,4 +201,12 @@ public interface Mask extends Iterable<Slot>, Parcelable {
      */
     void setForbidInputWhenFilled(boolean forbidInputWhenFilled);
 
+    /**
+     * Finds cursor position in unformatted string that corresponds to passed cursor position
+     * in a formatted string.
+     * @param cursorPosition
+     * @return corresponding cursor position in unformatted string
+     * @throws IndexOutOfBoundsException if cursorPosition < 0 or cursorPosition > size
+     */
+    int findCursorPositionInUnformattedString(int cursorPosition);
 }

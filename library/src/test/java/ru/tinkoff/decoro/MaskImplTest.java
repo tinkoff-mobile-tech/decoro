@@ -212,6 +212,33 @@ public class MaskImplTest {
 
     @Test
     public void clear() {
-
+        mask.insertFront("123");
+        assertEquals("1-23", mask.toString());
+        mask.clear();
+        assertEquals("", mask.toString());
+        mask.clear();
+        assertEquals("", mask.toString());
     }
+
+    @Test
+    public void findCursorPositionInUnformattedString_correct() throws Exception {
+        final Mask mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        assertEquals(1, mask.findCursorPositionInUnformattedString(1));
+        assertEquals(1, mask.findCursorPositionInUnformattedString(2));
+        assertEquals(1, mask.findCursorPositionInUnformattedString(3));
+        assertEquals(2, mask.findCursorPositionInUnformattedString(4));
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void findCursorPositionInUnformattedString_lower() throws Exception {
+        final Mask mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        mask.findCursorPositionInUnformattedString(-1);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void findCursorPositionInUnformattedString_upper() throws Exception {
+        final Mask mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER);
+        assertEquals(mask.getSize(), mask.findCursorPositionInUnformattedString(100500));
+    }
+
 }
