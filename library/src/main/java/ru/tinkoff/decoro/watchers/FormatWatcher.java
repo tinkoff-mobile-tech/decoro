@@ -53,7 +53,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     private boolean initWithMask;
 
     private boolean selfEdit = false;
-    private boolean formattingCancelled = false;
 
     private FormattedTextChangeListener callback;
 
@@ -199,12 +198,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             }
         }
 
-        // ask client code - should we proceed the modification of a mask
-        if (callback != null && callback.beforeFormatting(textBeforeChange.toString(), s.toString())) {
-            formattingCancelled = true;
-            return;
-        }
-
         if (diffMeasures.isRemovingChars()) {
             diffMeasures.setCursorPosition(mask.removeBackwards(diffMeasures.getRemoveEndPosition(), diffMeasures.getRemoveLength()));
         }
@@ -217,8 +210,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     @Override
     public void afterTextChanged(Editable newText) {
 
-        if (formattingCancelled || selfEdit || mask == null) {
-            formattingCancelled = false;
+        if (selfEdit || mask == null) {
             return;
         }
 
@@ -237,11 +229,11 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             setSelection(cursorPosition);
         }
 
+        textBeforeChange = null;
+
         if (callback != null) {
             callback.onTextFormatted(this, toString());
         }
-
-        textBeforeChange = null;
     }
 
     /**

@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.Locale;
 
 import ru.tinkoff.decoro.slots.Slot;
 
@@ -196,6 +197,7 @@ public class MaskImpl implements Mask {
         return true;
     }
 
+    @Override
     public void clear() {
         slots.clear();
         trimTail();
@@ -424,6 +426,31 @@ public class MaskImpl implements Mask {
     @Override
     public void setForbidInputWhenFilled(boolean forbidInputWhenFilled) {
         this.forbidInputWhenFilled = forbidInputWhenFilled;
+    }
+
+    @Override
+    public int findCursorPositionInUnformattedString(int cursorPosition) {
+        if (cursorPosition == 0) {
+            return 0;
+        } else if (cursorPosition < 0 || getSize() < cursorPosition) {
+            throw new IndexOutOfBoundsException(String.format(Locale.getDefault(), "Mask size: %d, passed index: %d", getSize(), cursorPosition));
+        }
+
+        Slot slot;
+        if (cursorPosition == getSize()) {
+            slot = slots.getLastSlot();
+        } else {
+            slot = slots.getSlot(cursorPosition);
+        }
+
+        do {
+            if (slot.hasTag(Slot.TAG_DECORATION)) {
+                cursorPosition--;
+            }
+            slot = slot.getPrevSlot();
+        } while (slot != null);
+
+        return cursorPosition;
     }
 
     public boolean isTerminated() {

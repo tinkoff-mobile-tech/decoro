@@ -58,7 +58,7 @@ public final class PredefinedSlots {
             PredefinedSlots.digit(),
     };
 
-    public static final Slot[] CARD_NUMBER_STANDART = {
+    public static final Slot[] CARD_NUMBER_STANDARD = {
             PredefinedSlots.digit(),
             PredefinedSlots.digit(),
             PredefinedSlots.digit(),
@@ -96,7 +96,7 @@ public final class PredefinedSlots {
             PredefinedSlots.digit(),
     };
 
-    public static final Slot[] CARD_NUMBER_STANDART_MASKABLE = {
+    public static final Slot[] CARD_NUMBER_STANDARD_MASKABLE = {
             PredefinedSlots.digit(),
             maskableDigit(),
             maskableDigit(),

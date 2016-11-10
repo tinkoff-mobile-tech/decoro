@@ -10,7 +10,7 @@ Android library designed for automatic formatting of text input by custom rules.
 Add to the `build.gradle` of your app module:
 ```Groovy
 dependencies {
-    compile "ru.tinkoff.decoro:decoro:1.1.1"
+    compile "ru.tinkoff.decoro:decoro:1.2.0"
 }
 ```
 
@@ -60,10 +60,10 @@ watcher.installOn(editText); // install on any TextView
 PredefinedSlots.SINGLE_SLOT                   // Any character
 PredefinedSlots.RUS_PHONE_NUMBER              // Russian phone number formatted as +7 (___) ___-__-__ (digits only)
 PredefinedSlots.RUS_PASSPORT                  // Series and number of russian passport formatted as ____ ______  (digits only)
-PredefinedSlots.CARD_NUMBER_USUAL             // Credit card number formatted as ____ ____ ____ ____ (digits only)
-PredefinedSlots.MASKABLE_CARD_NUMBER_USUAL    // Credit card number formatted as ____ ____ ____ ____ (digits and chars 'X', 'x', '*')
+PredefinedSlots.CARD_NUMBER_STANDARD          // Credit card number formatted as ____ ____ ____ ____ (digits only)
+PredefinedSlots.CARD_NUMBER_STANDARD_MASKABLE // Credit card number formatted as ____ ____ ____ ____ (digits and chars 'X', 'x', '*')
 PredefinedSlots.CARD_NUMBER_MAESTRO           // Credit card number formatted as ________ ____ (digits only)
-PredefinedSlots.MASKABLE_CARD_NUMBER_MAESTRO  // Credit card number formatted as ________ ____ (digits and chars 'X', 'x', '*')
+PredefinedSlots.CARD_NUMBER_MAESTRO_MASKABLE  // Credit card number formatted as ________ ____ (digits and chars 'X', 'x', '*')
 ```
 
 ##### Example 5. Using custom mask
@@ -86,6 +86,6 @@ More examples and details can be found [in our wiki][details wiki] (in Russian y
 
 [maven]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ru.tinkoff.decoro%22%20
 [details wiki]: https://github.com/TinkoffCreditSystems/decoro/wiki
-[img version shield]: https://img.shields.io/badge/version-1.1.1-blue.svg
+[img version shield]: https://img.shields.io/badge/version-1.2.0-blue.svg
 [img sample static]: https://raw.githubusercontent.com/TinkoffCreditSystems/decoro/master/img/static1.gif
 [img sample dynamic]: https://raw.githubusercontent.com/TinkoffCreditSystems/decoro/master/img/dynamic1.gif

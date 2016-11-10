@@ -1,3 +1,7 @@
+# Gradle file that is not added to Git allows you
+# to configure local builds
+gradle/local.gradle
+
 # [Android] ========================
 # Built application files
 *.apk

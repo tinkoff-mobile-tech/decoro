@@ -1,6 +1,11 @@
 apply plugin: 'com.android.library'
 apply from: '../gradle/publish-lib.gradle'
 
+def customGradleScript = '../gradle/local.gradle'
+if(new File(customGradleScript).exists()){
+    apply from: customGradleScript
+}
+
 android {
     compileSdkVersion rootProject.targetSdk
     buildToolsVersion rootProject.buildToolsVersion

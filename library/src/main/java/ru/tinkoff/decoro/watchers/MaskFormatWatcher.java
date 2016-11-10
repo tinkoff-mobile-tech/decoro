@@ -6,7 +6,7 @@ import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskImpl;
 
 /**
- * @author Mikhail Artemyev
+ * @author Mikhail Artemev
  */
 
 public class MaskFormatWatcher extends FormatWatcher {
@@ -30,5 +30,12 @@ public class MaskFormatWatcher extends FormatWatcher {
     public void setMask(MaskImpl maskOriginal) {
         this.maskOriginal = maskOriginal;
         refreshMask();
+    }
+
+    public void swapMask(MaskImpl newMask) {
+        maskOriginal = new MaskImpl(newMask);
+        maskOriginal.clear();
+
+        refreshMask(newMask.toString());
     }
 }

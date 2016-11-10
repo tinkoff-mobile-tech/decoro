@@ -59,7 +59,7 @@ public class MaskSelectorDialog extends DialogFragment implements DialogInterfac
                 maskDescriptor = MaskDescriptor.ofSlots(PredefinedSlots.RUS_PHONE_NUMBER);
                 break;
             case MASK_CARD_STANDARD:
-                maskDescriptor = MaskDescriptor.ofSlots(PredefinedSlots.CARD_NUMBER_STANDART_MASKABLE);
+                maskDescriptor = MaskDescriptor.ofSlots(PredefinedSlots.CARD_NUMBER_STANDARD_MASKABLE);
                 break;
             case MASK_CARD_MAESTRO:
                 maskDescriptor = MaskDescriptor.ofSlots(PredefinedSlots.CARD_NUMBER_MAESTRO_MASKABLE)
