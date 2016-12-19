@@ -19,14 +19,19 @@ package ru.tinkoff.decoro.watchers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.BaseInputConnection;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import ru.tinkoff.decoro.FormattedTextChangeListener;
 import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskFactory;
+import ru.tinkoff.decoro.MaskImpl;
 
 /**
  * <p>
@@ -44,6 +49,10 @@ import ru.tinkoff.decoro.MaskFactory;
  */
 public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 
+    public static boolean DEBUG = false;
+
+    private static final String TAG = "FormatWatcher";
+
     private DiffMeasures diffMeasures = new DiffMeasures();
 
     private CharSequence textBeforeChange;
@@ -53,6 +62,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     private boolean initWithMask;
 
     private boolean selfEdit = false;
+    private boolean noChanges = false;
     private boolean formattingCancelled = false;
 
     private FormattedTextChangeListener callback;
@@ -163,10 +173,18 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             return;
         }
 
+        if (DEBUG) {
+            Log.i(TAG, "beforeTextChanged: s=" + s + ", start=" + start + ", count=" + count + ", after=" + after);
+        }
+
         // copy original string
         textBeforeChange = new String(s.toString());
 
         diffMeasures.calculateBeforeTextChanged(start, count, after);
+
+        if (DEBUG) {
+            Log.i(TAG, "beforeTextChanged: " + diffMeasures);
+        }
     }
 
     @Override
@@ -174,6 +192,10 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 
         if (selfEdit || mask == null) {
             return;
+        }
+
+        if (DEBUG) {
+            Log.i(TAG, "onTextChanged: s=" + s + ", start=" + start + ", before=" + before + ", count=" + insertedCount);
         }
 
         CharSequence diffChars = null;
@@ -205,34 +227,79 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             return;
         }
 
+        noChanges = textBeforeChange.equals(s.toString());
+        if (noChanges) {
+            return;
+        }
+
+        if (DEBUG) {
+            Log.i(TAG, "onTextChanged: diffChars: " + diffChars);
+        }
+
         if (diffMeasures.isRemovingChars()) {
             diffMeasures.setCursorPosition(mask.removeBackwards(diffMeasures.getRemoveEndPosition(), diffMeasures.getRemoveLength()));
+        }
+
+        if (DEBUG) {
+            Log.i(TAG, "onTextChanged: after removing " + diffMeasures + ", mask: " + mask);
         }
 
         if (diffMeasures.isInsertingChars()) {
             diffMeasures.setCursorPosition(mask.insertAt(diffMeasures.getStartPosition(), diffChars));
         }
+
+        if (DEBUG) {
+            Log.i(TAG, "onTextChanged: after inserting " + diffMeasures + ", mask: " + mask);
+        }
+
     }
 
     @Override
     public void afterTextChanged(Editable newText) {
-
-        if (formattingCancelled || selfEdit || mask == null) {
+        if (formattingCancelled || selfEdit || mask == null || noChanges) {
             formattingCancelled = false;
             return;
         }
 
         String formatted = mask.toString();
 
-        // force change text of EditText we're attached to
-        // only in case it's necessary (formatted text differs from inputted)
-        if (!formatted.equals(newText.toString())) {
-            selfEdit = true;
-            newText.replace(0, newText.length(), formatted, 0, formatted.length());
-            selfEdit = false;
+        if (DEBUG) {
+            Log.i(TAG, "afterTextChanged: formatted=" + formatted + ", newText=" + newText);
         }
 
         final int cursorPosition = diffMeasures.getCursorPosition();
+        // force change text of EditText we're attached to
+        // only in case it's necessary (formatted text differs from inputted)
+        if (!formatted.equals(newText.toString())) {
+            int start = BaseInputConnection.getComposingSpanStart(newText);
+            int end = cursorPosition > newText.length() ? newText.length() : cursorPosition;
+            CharSequence pasted;
+            if (start == -1 || end == -1) {
+                pasted = formatted;
+            } else {
+                SpannableStringBuilder sb = new SpannableStringBuilder();
+                sb.append(formatted.substring(0, start));
+                SpannableString composing = new SpannableString(formatted.substring(start, end));
+                BaseInputConnection.setComposingSpans(composing);
+                sb.append(composing);
+                sb.append(formatted.substring(end, formatted.length()));
+                pasted = sb;
+
+                if (DEBUG) {
+                    Log.i(TAG, "afterTextChanged: composingTextStart=" + start + ", cursor=" + end);
+                }
+
+            }
+            selfEdit = true;
+            newText.replace(0, newText.length(), pasted, 0, formatted.length());
+            selfEdit = false;
+        }
+
+        if (DEBUG) {
+            Log.i(TAG, "afterTextChanged: " + diffMeasures);
+            Log.i(TAG, "MASK: " + mask);
+        }
+
         if (0 <= cursorPosition && cursorPosition <= newText.length()) {
             setSelection(cursorPosition);
         }

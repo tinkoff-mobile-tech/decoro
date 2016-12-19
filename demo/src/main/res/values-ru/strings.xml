@@ -3,6 +3,7 @@
 
     <string name="hint_mask">Маска</string>
     <string name="choose_mask">Выбрать маску</string>
+    <string name="slots_behaviour">Слоты</string>
     <string name="static_mask_button">Готовая маска</string>
     <string name="custom_mask_button">Произвольная маска</string>
     <string name="mask_phone">Номер телефона</string>

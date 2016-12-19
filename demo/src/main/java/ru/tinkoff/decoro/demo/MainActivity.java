@@ -23,11 +23,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import ru.tinkoff.decoro.watchers.FormatWatcher;
+
 /**
  * @author Mikhail Artemev
  */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    {
+        FormatWatcher.DEBUG = true;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.btnCustomMask).setOnClickListener(this);
         findViewById(R.id.btnStaticMask).setOnClickListener(this);
+        findViewById(R.id.btnSlotsBehaviour).setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnStaticMask:
                 activityClass = StaticMaskActivity.class;
                 break;
+            case R.id.btnSlotsBehaviour:
+                activityClass = SlotBehaviourActivity.class;
+                break;
+
             default:
                 throw new IllegalStateException();
         }

@@ -44,12 +44,17 @@ public final class Slot implements Serializable, Parcelable {
      */
     public static final int RULE_INPUT_MOVES_INPUT = 1 << 1;
 
+
+    public static final int MASK_INPUT_RILES = 3;
     /**
      * On input slot moves it's current value to the nextSlot
      */
     public static final int RULES_DEFAULT = 0;
 
     public static final int RULES_HARDCODED = RULE_INPUT_MOVES_INPUT | RULE_INPUT_REPLACE;
+
+    public static final int RULE_FORBID_CURSOR_MOVE_LEFT = 1 << 2;
+    public static final int RULE_FORBID_CURSOR_MOVE_RIGHT = 1 << 3;
 
     /**
      * Tag that marks a slot as a "decoration" slot. This kind of slots are only needed for
@@ -63,6 +68,8 @@ public final class Slot implements Serializable, Parcelable {
     private int rulesFlags = RULES_DEFAULT;
 
     private Character value;
+
+    private ValueInterpreter valueInterpreter;
 
     private final Set<Integer> tags = new HashSet<>();
 
@@ -95,7 +102,7 @@ public final class Slot implements Serializable, Parcelable {
                 slotToCopy.value,
                 slotToCopy.getValidators()
         );
-
+        this.valueInterpreter = slotToCopy.valueInterpreter;
         this.tags.addAll(slotToCopy.tags);
     }
 
@@ -119,12 +126,29 @@ public final class Slot implements Serializable, Parcelable {
         return setValueInner(0, newValue, fromLeft);
     }
 
+    public void setFlags(int rulesFlags) {
+        this.rulesFlags = rulesFlags;
+    }
+
+    public int getFlags() {
+        return rulesFlags;
+    }
+
+    public void setValueInterpreter(ValueInterpreter valueInterpreter) {
+        this.valueInterpreter = valueInterpreter;
+    }
+
+    public Slot withValueInterpreter(ValueInterpreter valueInterpreter) {
+        this.valueInterpreter = valueInterpreter;
+        return this;
+    }
+
     private int setValueInner(int offset, @Nullable Character newValue, boolean fromLeft) {
+        newValue = valueInterpreter == null ? newValue : valueInterpreter.interpret(newValue);
         if (newValue == null) {
             removeCurrentValue();
-            return 0;
+            return checkRule(RULE_FORBID_CURSOR_MOVE_LEFT) ? 1 : 0;
         }
-
         return setNewValue(offset, newValue, fromLeft);
     }
 
@@ -134,6 +158,8 @@ public final class Slot implements Serializable, Parcelable {
     }
 
     public boolean canInsertHere(char newValue) {
+        newValue = valueInterpreter == null ? newValue : valueInterpreter.interpret(newValue);
+
         if (hardcoded()) {
             return value.equals(newValue);
         }
@@ -177,7 +203,7 @@ public final class Slot implements Serializable, Parcelable {
                 && !checkRule(RULE_INPUT_REPLACE);
 
         if (hardcoded() && !forbiddenInputFromLeft && value.equals(newValue)) {
-            return ++offset;
+            return checkRule(RULE_FORBID_CURSOR_MOVE_RIGHT) ? offset : offset + 1;
         }
 
         int newOffset = 0;
@@ -188,14 +214,14 @@ public final class Slot implements Serializable, Parcelable {
             changeCurrent = false;
         }
 
-        if (value != null && rulesFlags == RULES_DEFAULT) {
+        if (value != null && ((rulesFlags & MASK_INPUT_RILES) == RULES_DEFAULT)) {
             // we should push current value further without
             pushValueToSlot(0, value, nextSlot);
         }
 
         if (changeCurrent) {
             value = newValue;
-            newOffset = offset + 1;
+            newOffset = checkRule(RULE_FORBID_CURSOR_MOVE_RIGHT) ? offset : offset + 1;
         }
 
         return newOffset;
@@ -310,7 +336,7 @@ public final class Slot implements Serializable, Parcelable {
         dest.writeInt(this.rulesFlags);
         dest.writeSerializable(this.value);
         dest.writeSerializable(this.validators);
-
+        dest.writeSerializable(this.valueInterpreter);
         dest.writeInt(tags.size());
         for (Integer theTag : tags) {
             dest.writeInt(theTag);
@@ -321,7 +347,7 @@ public final class Slot implements Serializable, Parcelable {
         this.rulesFlags = in.readInt();
         this.value = (Character) in.readSerializable();
         this.validators = (SlotValidatorSet) in.readSerializable();
-
+        this.valueInterpreter = (ValueInterpreter) in.readSerializable();
         final int tagsCount = in.readInt();
         for (int i = 0; i < tagsCount; i++) {
             tags.add(in.readInt());
@@ -360,6 +386,14 @@ public final class Slot implements Serializable, Parcelable {
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (validators != null ? validators.hashCode() : 0);
+        return result;
+    }
+
+    public static Slot[] copySlotArray(Slot[] arr) {
+        Slot[] result = new Slot[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = new Slot(arr[i]);
+        }
         return result;
     }
 }

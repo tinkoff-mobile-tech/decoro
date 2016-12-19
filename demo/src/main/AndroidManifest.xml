@@ -21,6 +21,8 @@
 
         <activity android:name="ru.tinkoff.decoro.demo.StaticMaskActivity"/>
 
+        <activity android:name="ru.tinkoff.decoro.demo.SlotBehaviourActivity"/>
+
     </application>
 
 </manifest>

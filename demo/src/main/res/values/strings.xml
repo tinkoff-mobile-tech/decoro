@@ -4,6 +4,7 @@
     <string name="hint_data">Input something</string>
     <string name="hint_mask">Mask</string>
     <string name="choose_mask">Choose mask</string>
+    <string name="slots_behaviour">Slots behaviour</string>
     <string name="static_mask_button">Static mask</string>
     <string name="custom_mask_button">Custom mask</string>
     <string name="mask_card">Card number (Visa, MasterCard)</string>
