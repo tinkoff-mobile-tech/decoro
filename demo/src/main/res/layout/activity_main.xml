@@ -17,6 +17,13 @@
         android:id="@+id/btnStaticMask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/static_mask_button"/>
+
+    <Button
+        android:id="@+id/btnSlotsBehaviour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/slots_behaviour"/>
 
 </LinearLayout>

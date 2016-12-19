@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.btnCustomMask).setOnClickListener(this);
         findViewById(R.id.btnStaticMask).setOnClickListener(this);
+        findViewById(R.id.btnSlotsBehaviour).setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnStaticMask:
                 activityClass = StaticMaskActivity.class;
                 break;
+            case R.id.btnSlotsBehaviour:
+                activityClass = SlotBehaviourActivity.class;
+                break;
+
             default:
                 throw new IllegalStateException();
         }

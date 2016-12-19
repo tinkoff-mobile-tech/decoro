@@ -24,6 +24,11 @@ android {
     }
 }
 
+tasks.withType(Javadoc) {
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
 dependencies {
     compile "com.android.support:support-annotations:$rootProject.supportVersion"
 

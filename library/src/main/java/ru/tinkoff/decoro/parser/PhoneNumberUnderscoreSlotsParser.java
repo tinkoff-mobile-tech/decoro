@@ -31,23 +31,35 @@ public class PhoneNumberUnderscoreSlotsParser extends UnderscoreDigitSlotsParser
     private static final char PLUS_SIGN = '+';
 
     private int rule;
+    private boolean terminateFindLastDigit;
+    private Slot lastDigit;
 
     @NonNull
     @Override
     public Slot[] parseSlots(@NonNull CharSequence rawMask) {
         rule = Slot.RULE_INPUT_MOVES_INPUT | Slot.RULE_INPUT_REPLACE;
-        return super.parseSlots(rawMask);
+        terminateFindLastDigit = false;
+        lastDigit = null;
+        Slot[] result = super.parseSlots(rawMask);
+//        lastDigit.setFlags(lastDigit.getFlags() | Slot.RULE_FORBID_CURSOR_MOVE_LEFT);
+        return result;
     }
 
     @Override
     protected Slot slotFromNonUnderscoredChar(char character) {
         if (!Character.isDigit(character)) {
+            if (lastDigit != null) {
+                terminateFindLastDigit = true;
+            }
             final Slot hardcoded = PredefinedSlots.hardcodedSlot(character);
             return character == PLUS_SIGN ? hardcoded : hardcoded.withTags(Slot.TAG_DECORATION);
         }
 
         final Slot slot = new Slot(rule, character, SlotValidatorSet.setOf(new SlotValidators.DigitValidator()));
         rule = Slot.RULE_INPUT_MOVES_INPUT;
+        if (!terminateFindLastDigit) {
+            lastDigit = slot;
+        }
 
         return slot;
     }

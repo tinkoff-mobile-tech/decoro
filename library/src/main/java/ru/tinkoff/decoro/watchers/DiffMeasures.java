@@ -16,6 +16,8 @@
 
 package ru.tinkoff.decoro.watchers;
 
+import java.util.Locale;
+
 /**
  * @author Mikhail Artemev
  */
@@ -23,6 +25,8 @@ class DiffMeasures {
 
     private static final int INSERT = 1;
     private static final int REMOVE = 1 << 1;
+
+    private static final int MASK_BOTH_TYPE = 3;
 
     private int diffStartPosition;
     private int diffInsertLength;
@@ -107,4 +111,30 @@ class DiffMeasures {
     public boolean isTrimmingSequence() {
         return trimmingSequence;
     }
+
+    @Override
+    public String toString() {
+        String type = null;
+        if ((MASK_BOTH_TYPE & diffType) == MASK_BOTH_TYPE) {
+            type = "both";
+        } else if ((INSERT & diffType) == INSERT) {
+            type = "insert";
+        } else if ((REMOVE & diffType) == REMOVE) {
+            type = "remove";
+        } else if (diffType == 0) {
+            type = "none";
+        }
+        if (type == null) {
+            throw new IllegalStateException("unknown behaviour for diffType " + diffType);
+        }
+        return String.format(Locale.getDefault(),
+                "[ DiffMeasures type=%s, diffStartPosition=%d, diffInsertLength=%d, diffRemoveLength=%d, cursor: %d ]",
+                type,
+                diffStartPosition,
+                diffInsertLength,
+                diffRemoveLength,
+                cursorPosition
+        );
+    }
+
 }

@@ -353,8 +353,8 @@ public class MaskImpl implements Mask {
         for (int i = 0; i < count; i++) {
             if (slots.checkIsIndex(cursorPosition)) {
                 final Slot s = slots.getSlot(cursorPosition);
-                if (s != null && !s.hardcoded()) {
-                    s.setValue(null);
+                if (s != null) {
+                    cursorPosition += s.setValue(null);
                 }
             }
 

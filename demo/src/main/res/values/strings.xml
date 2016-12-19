@@ -4,6 +4,7 @@
     <string name="hint_data">Input something</string>
     <string name="hint_mask">Mask</string>
     <string name="choose_mask">Choose mask</string>
+    <string name="slots_behaviour">Slots behaviour</string>
     <string name="static_mask_button">Static mask</string>
     <string name="custom_mask_button">Custom mask</string>
     <string name="mask_card">Card number (Visa, MasterCard)</string>
@@ -11,4 +12,9 @@
     <string name="mask_passport">Russian passport</string>
     <string name="mask_phone">Russian phone</string>
     <string name="mask_preview">Mask: %s</string>
+    <string name="hide_hardcoded_head">Hide hardcoded head</string>
+    <string name="forbid_move_left">Forbid left cursor movement when deleting characters</string>
+    <string name="replace_8_to_7">Replace 8 to 7 in +7</string>
+    <string name="fill_when_install">Fill header when mask installed and forbid left movement</string>
+    <string name="forbid_move_right">Forbid right cursor movement after some character when input new characters</string>
 </resources>
