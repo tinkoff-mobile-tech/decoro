@@ -280,6 +280,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
                 SpannableStringBuilder sb = new SpannableStringBuilder();
                 sb.append(formatted.substring(0, start));
                 SpannableString composing = new SpannableString(formatted.substring(start, end));
+                // void setComposingSpans(Spannable text, int start, int end) in BaseInputConnection is hide api
                 BaseInputConnection.setComposingSpans(composing);
                 sb.append(composing);
                 sb.append(formatted.substring(end, formatted.length()));
