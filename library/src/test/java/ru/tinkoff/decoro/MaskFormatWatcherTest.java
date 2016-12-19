@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2016 Tinkoff Bank
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ru.tinkoff.decoro;
 
 import android.annotation.SuppressLint;
@@ -12,14 +28,12 @@ import org.robolectric.annotation.Config;
 
 import ru.tinkoff.decoro.parser.PhoneNumberUnderscoreSlotsParser;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
-import ru.tinkoff.decoro.watchers.DescriptorFormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
 
 /**
- * Created by a.shishkin1 on 11.12.2016.
+ * @author a.shishkin1
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
@@ -99,24 +113,6 @@ public class MaskFormatWatcherTest {
             editable.replace(4, 9, "123456");
             assertEquals("+7 (123) 456-", textView.getText().toString());
         }
-
-        textView.setText("+797441");
-
-        {
-            Editable editable = (Editable) textView.getText();
-            editable.replace(7, 10, "412");
-            assertEquals("+7 (974) 412-", textView.getText().toString());
-        }
-
-        textView.setText("+7 (532) 912-54-2");
-
-        {
-            Editable editable = (Editable) textView.getText();
-            editable.replace(4, 9, "5324");
-            assertEquals("+7 (532) 491-25-42", textView.getText().toString());
-        }
-
-
     }
 
     @Test
@@ -147,5 +143,4 @@ public class MaskFormatWatcherTest {
         textView.setText("7"); // +7_(
         assertEquals(4, watcher.getCursorPosition());
     }
-
 }

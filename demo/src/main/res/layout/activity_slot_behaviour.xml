@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-    <EditText
-        android:layout_marginTop="16dp"
-        android:id="@+id/slot0"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <EditText
-        android:layout_marginTop="16dp"
-        android:id="@+id/slot1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/hide_hardcoded_head" />
 
-    <EditText
-        android:layout_marginTop="16dp"
-        android:id="@+id/slot2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <EditText
+            android:id="@+id/slot0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <EditText
-        android:layout_marginTop="16dp"
-        android:id="@+id/slot3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/forbid_move_left" />
 
-    <EditText
-        android:layout_marginTop="16dp"
-        android:id="@+id/slot4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        <EditText
+            android:id="@+id/slot1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/replace_8_to_7" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/slot2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/fill_when_install" />
+
+        <EditText
+            android:id="@+id/slot3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/forbid_move_right" />
+
+        <EditText
+            android:id="@+id/slot4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

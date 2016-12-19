@@ -11,4 +11,9 @@
     <string name="mask_card_maestro">Номер карты (Maestro)</string>
     <string name="mask_passport">Серия и номер паспорта</string>
     <string name="mask_preview">Маска: %s</string>
+    <string name="hide_hardcoded_head">Скрывать предустановленный заголовок маски</string>
+    <string name="forbid_move_left">Запрет перемещения курсора левее определенного символа, при удалении символов</string>
+    <string name="replace_8_to_7">Замена 8 на 7 в +7</string>
+    <string name="fill_when_install">Заголовок заполняется сразу, запрет перемещения курсора левее</string>
+    <string name="forbid_move_right">Запрет перемещения курсора правее определенного символа, при вводе новых символов</string>
 </resources>

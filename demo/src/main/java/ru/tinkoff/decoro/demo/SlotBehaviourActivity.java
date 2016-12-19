@@ -1,15 +1,24 @@
+/*
+ * Copyright © 2016 Tinkoff Bank
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ru.tinkoff.decoro.demo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.SpannableStringBuilder;
-import android.util.Log;
-import android.view.inputmethod.BaseInputConnection;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import ru.tinkoff.decoro.MaskImpl;
@@ -19,9 +28,8 @@ import ru.tinkoff.decoro.slots.ValueInterpreter;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 /**
- * Created by a.shishkin1 on 08.12.2016.
+ * @author a.shishkin1
  */
-
 public class SlotBehaviourActivity extends AppCompatActivity {
 
     @Override
@@ -29,7 +37,7 @@ public class SlotBehaviourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slot_behaviour);
 
-        /* hide hardcoded head behaviour */
+        //hide hardcoded head behaviour
         init(R.id.slot0, new ExampleBehaviour() {
             @Override
             void changeMask(MaskImpl mask) {
@@ -37,7 +45,7 @@ public class SlotBehaviourActivity extends AppCompatActivity {
             }
         });
 
-        /* forbid move*/
+        //forbid left movement
         init(R.id.slot1, new ExampleBehaviour() {
 
             @Override
@@ -46,20 +54,23 @@ public class SlotBehaviourActivity extends AppCompatActivity {
             }
         });
 
-
+        //replace 8 to 7 in +7, forbid left movement
         init(R.id.slot2, new ExampleBehaviour() {
             @Override
             void changeSlots(Slot[] slots) {
                 slots[1].setValueInterpreter(new ValueInterpreter() {
                     @Override
                     public Character interpret(Character character) {
-                        if (character == null) return null;
+                        if (character == null) {
+                            return null;
+                        }
                         return character == '8' ? '7' : character;
                     }
                 });
             }
         });
 
+        //fill mask when installed, forbid left movement
         init(R.id.slot3, new ExampleBehaviour() {
 
             @Override
@@ -73,13 +84,13 @@ public class SlotBehaviourActivity extends AppCompatActivity {
             }
         });
 
+        //forbid right movement
         init(R.id.slot4, new ExampleBehaviour() {
             @Override
             void changeSlots(Slot[] slots) {
                 slots[9].setFlags(slots[9].getFlags() | Slot.RULE_FORBID_CURSOR_MOVE_RIGHT);
             }
         });
-
     }
 
     private void init(int editTextId, ExampleBehaviour behaviour) {
@@ -97,11 +108,18 @@ public class SlotBehaviourActivity extends AppCompatActivity {
     }
 
     class ExampleBehaviour {
-        void changeMask(MaskImpl mask) {}
-        void changeSlots(Slot[] slots) {}
-        boolean isTerminated() { return true; }
-        boolean fillWhenInstall() { return false; }
+        void changeMask(MaskImpl mask) {
+        }
+
+        void changeSlots(Slot[] slots) {
+        }
+
+        boolean isTerminated() {
+            return true;
+        }
+
+        boolean fillWhenInstall() {
+            return false;
+        }
     }
-
-
 }

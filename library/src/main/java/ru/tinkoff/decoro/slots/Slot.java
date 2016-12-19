@@ -45,7 +45,7 @@ public final class Slot implements Serializable, Parcelable {
     public static final int RULE_INPUT_MOVES_INPUT = 1 << 1;
 
 
-    public static final int MASK_INPUT_RILES = 3;
+    public static final int MASK_INPUT_RULES = 3;
     /**
      * On input slot moves it's current value to the nextSlot
      */
@@ -214,7 +214,7 @@ public final class Slot implements Serializable, Parcelable {
             changeCurrent = false;
         }
 
-        if (value != null && ((rulesFlags & MASK_INPUT_RILES) == RULES_DEFAULT)) {
+        if (value != null && ((rulesFlags & MASK_INPUT_RULES) == RULES_DEFAULT)) {
             // we should push current value further without
             pushValueToSlot(0, value, nextSlot);
         }
