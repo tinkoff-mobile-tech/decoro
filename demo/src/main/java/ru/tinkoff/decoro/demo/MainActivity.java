@@ -31,10 +31,6 @@ import ru.tinkoff.decoro.watchers.FormatWatcher;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    {
-        FormatWatcher.DEBUG = true;
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -173,18 +173,10 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             return;
         }
 
-        if (DEBUG) {
-            Log.i(TAG, "beforeTextChanged: s=" + s + ", start=" + start + ", count=" + count + ", after=" + after);
-        }
-
         // copy original string
         textBeforeChange = new String(s.toString());
 
         diffMeasures.calculateBeforeTextChanged(start, count, after);
-
-        if (DEBUG) {
-            Log.i(TAG, "beforeTextChanged: " + diffMeasures);
-        }
     }
 
     @Override
@@ -192,10 +184,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 
         if (selfEdit || mask == null) {
             return;
-        }
-
-        if (DEBUG) {
-            Log.i(TAG, "onTextChanged: s=" + s + ", start=" + start + ", before=" + before + ", count=" + insertedCount);
         }
 
         CharSequence diffChars = null;
@@ -232,26 +220,13 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
             return;
         }
 
-        if (DEBUG) {
-            Log.i(TAG, "onTextChanged: diffChars: " + diffChars);
-        }
-
         if (diffMeasures.isRemovingChars()) {
             diffMeasures.setCursorPosition(mask.removeBackwards(diffMeasures.getRemoveEndPosition(), diffMeasures.getRemoveLength()));
-        }
-
-        if (DEBUG) {
-            Log.i(TAG, "onTextChanged: after removing " + diffMeasures + ", mask: " + mask);
         }
 
         if (diffMeasures.isInsertingChars()) {
             diffMeasures.setCursorPosition(mask.insertAt(diffMeasures.getStartPosition(), diffChars));
         }
-
-        if (DEBUG) {
-            Log.i(TAG, "onTextChanged: after inserting " + diffMeasures + ", mask: " + mask);
-        }
-
     }
 
     @Override
@@ -262,10 +237,6 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         }
 
         String formatted = mask.toString();
-
-        if (DEBUG) {
-            Log.i(TAG, "afterTextChanged: formatted=" + formatted + ", newText=" + newText);
-        }
 
         final int cursorPosition = diffMeasures.getCursorPosition();
         // force change text of EditText we're attached to
@@ -285,20 +256,10 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
                 sb.append(composing);
                 sb.append(formatted.substring(end, formatted.length()));
                 pasted = sb;
-
-                if (DEBUG) {
-                    Log.i(TAG, "afterTextChanged: composingTextStart=" + start + ", cursor=" + end);
-                }
-
             }
             selfEdit = true;
             newText.replace(0, newText.length(), pasted, 0, formatted.length());
             selfEdit = false;
-        }
-
-        if (DEBUG) {
-            Log.i(TAG, "afterTextChanged: " + diffMeasures);
-            Log.i(TAG, "MASK: " + mask);
         }
 
         if (0 <= cursorPosition && cursorPosition <= newText.length()) {
