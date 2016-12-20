@@ -10,7 +10,7 @@ Android library designed for automatic formatting of text input by custom rules.
 Add to the `build.gradle` of your app module:
 ```Groovy
 dependencies {
-    compile "ru.tinkoff.decoro:decoro:$latestVersion"
+    compile 'ru.tinkoff.decoro:decoro:$latestVersion'
 }
 ```
 
