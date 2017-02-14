@@ -318,7 +318,7 @@ class SlotsList implements Iterable<Slot>, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.size);
         if (size > 0) {
-            dest.writeArray(toArray());
+            dest.writeTypedArray(toArray(), flags);
         }
     }
 
@@ -326,7 +326,7 @@ class SlotsList implements Iterable<Slot>, Parcelable {
         this.size = in.readInt();
         if (size > 0) {
             Slot[] slots = new Slot[this.size];
-            in.readArray(Slot.class.getClassLoader());
+            in.readTypedArray(slots, Slot.CREATOR);
             linkSlots(slots, this);
         }
     }
