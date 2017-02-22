@@ -233,6 +233,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     public void afterTextChanged(Editable newText) {
         if (formattingCancelled || selfEdit || mask == null || noChanges) {
             formattingCancelled = false;
+            noChanges = false;
             return;
         }
 
