@@ -145,18 +145,19 @@ public final class SlotValidators {
         }
 
         private boolean validateEnglishLetter(final char value) {
-            return supportsEnglish == isEnglishCharacter(value); // true when both 0 or 1
+            return supportsEnglish && isEnglishCharacter(value); // true when both 1
         }
 
         private boolean validateRussianLetter(final char value) {
-            final int code = (int) value;
-            boolean russian = 'А' <= code && code <= 'я'; // 'А' is russian!!
-
-            return supportsRussian == russian; // true when both 0 or 1
+            return supportsRussian && isRussianCharacter(value); // true when both 1
         }
 
         private boolean isEnglishCharacter(final int charCode) {
             return ('A' <= charCode && charCode <= 'Z') || ('a' <= charCode && charCode <= 'z');
+        }
+
+        private boolean isRussianCharacter(final int charCode) {
+            return 'А' <= charCode && charCode <= 'я'; // 'А' is russian!!
         }
 
         @Override
