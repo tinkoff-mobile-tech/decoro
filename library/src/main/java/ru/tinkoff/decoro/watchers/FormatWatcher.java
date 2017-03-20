@@ -22,7 +22,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.widget.EditText;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import ru.tinkoff.decoro.FormattedTextChangeListener;
 import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskFactory;
-import ru.tinkoff.decoro.MaskImpl;
 
 /**
  * <p>
@@ -221,7 +219,11 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
         }
 
         if (diffMeasures.isRemovingChars()) {
-            diffMeasures.setCursorPosition(mask.removeBackwards(diffMeasures.getRemoveEndPosition(), diffMeasures.getRemoveLength()));
+            if (!diffMeasures.isInsertingChars()) {
+                diffMeasures.setCursorPosition(mask.removeBackwards(diffMeasures.getRemoveEndPosition(), diffMeasures.getRemoveLength()));
+            } else {
+                diffMeasures.setCursorPosition(mask.removeBackwardsWithoutHardcoded(diffMeasures.getRemoveEndPosition(), diffMeasures.getRemoveLength()));
+            }
         }
 
         if (diffMeasures.isInsertingChars()) {

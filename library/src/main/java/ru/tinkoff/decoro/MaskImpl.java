@@ -347,42 +347,15 @@ public class MaskImpl implements Mask {
     @Override
     public int removeBackwards(final int position, int count) {
 
-        int cursorPosition = position;
-
-        // go back fom position and remove any non-hardcoded characters
-        for (int i = 0; i < count; i++) {
-            if (slots.checkIsIndex(cursorPosition)) {
-                final Slot s = slots.getSlot(cursorPosition);
-                if (s != null) {
-                    cursorPosition += s.setValue(null);
-                }
-            }
-
-            cursorPosition--;
-        }
-
-        cursorPosition++;
-
-        trimTail();
-
-        // We could remove a symbol before a sequence of hardcoded characters
-        // that are now tail. It this case our cursor index will point at non printable
-        // character. To avoid this find next not-hardcoded symbol to the left
-        int tmpPosition = cursorPosition;
-        Slot slot;
-        do {
-            slot = slots.getSlot(--tmpPosition);
-        } while (slot != null && slot.hardcoded() && tmpPosition > 0);
-
-        // show hardcoded tail only is this tail is hardcode head and hideHardcodedHead is on
-        showHardcodedTail = tmpPosition <= 0 && !hideHardcodedHead;
-
-        if (tmpPosition > 0) {
-            cursorPosition = tmpPosition + 1;
-        }
-
-        return (cursorPosition >= 0 && cursorPosition <= slots.size()) ? cursorPosition : 0;
+        return removeBackwardsInner(position, count, true);
     }
+
+    @Override
+    public int removeBackwardsWithoutHardcoded(final int position, int count) {
+
+        return removeBackwardsInner(position, count, false);
+    }
+
 
     @Override
     public int getSize() {
@@ -549,6 +522,45 @@ public class MaskImpl implements Mask {
 
         return out;
     }
+
+    private int removeBackwardsInner(int position, int count, boolean removeHardcoded) {
+        int cursorPosition = position;
+
+        // go back fom position and remove any non-hardcoded characters
+        for (int i = 0; i < count; i++) {
+            if (slots.checkIsIndex(cursorPosition)) {
+                final Slot s = slots.getSlot(cursorPosition);
+                if (s != null && (!s.hardcoded() || (removeHardcoded && count == 1))) {
+                    cursorPosition += s.setValue(null);
+                }
+            }
+
+            cursorPosition--;
+        }
+
+        cursorPosition++;
+
+        trimTail();
+
+        // We could remove a symbol before a sequence of hardcoded characters
+        // that are now tail. It this case our cursor index will point at non printable
+        // character. To avoid this find next not-hardcoded symbol to the left
+        int tmpPosition = cursorPosition;
+        Slot slot;
+        do {
+            slot = slots.getSlot(--tmpPosition);
+        } while (slot != null && slot.hardcoded() && tmpPosition > 0);
+
+        // show hardcoded tail only is this tail is hardcode head and hideHardcodedHead is on
+        showHardcodedTail = tmpPosition <= 0 && !hideHardcodedHead;
+
+        if (tmpPosition > 0) {
+            cursorPosition = tmpPosition + 1;
+        }
+
+        return (cursorPosition >= 0 && cursorPosition <= slots.size()) ? cursorPosition : 0;
+    }
+
 
     private static class SlotIndexOffset {
 

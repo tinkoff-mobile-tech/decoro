@@ -118,6 +118,8 @@ public interface Mask extends Iterable<Slot>, Parcelable {
      */
     int removeBackwards(int position, int count);
 
+    int removeBackwardsWithoutHardcoded(int position, int count);
+
     /**
      * Returns current size of a mask in slots. <br/>
      * <b>IMPORTANT:</b> empty slots are also counted.

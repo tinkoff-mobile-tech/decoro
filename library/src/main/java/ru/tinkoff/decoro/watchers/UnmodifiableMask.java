@@ -89,6 +89,11 @@ class UnmodifiableMask implements Mask {
     }
 
     @Override
+    public int removeBackwardsWithoutHardcoded(int position, int count) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int getSize() {
         return delegate == null ? 0 : delegate.getSize();
     }
