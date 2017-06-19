@@ -110,7 +110,7 @@ public class MaskFormatWatcherTest {
 
         {
             Editable editable = (Editable) textView.getText();
-            editable.replace(4, 9, "123456");
+            editable.replace(4, 11, "123456");
             assertEquals("+7 (123) 456-", textView.getText().toString());
         }
     }
