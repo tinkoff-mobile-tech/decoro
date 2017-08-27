@@ -24,12 +24,17 @@
         android:text="@string/mask_preview"
         android:textSize="18sp"/>
 
-    <EditText
-        android:id="@+id/editData"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="@string/hint_data"
-        android:inputType="phone"/>
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/hint_data"
+            android:inputType="phone"/>
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
