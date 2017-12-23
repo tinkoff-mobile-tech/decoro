@@ -24,4 +24,5 @@ dependencies {
 //    compile "ru.tinkoff.decoro:decoro:1.3.1"
 
     compile "com.android.support:appcompat-v7:$rootProject.supportVersion"
+    compile "com.android.support:design:$rootProject.supportVersion"
 }
