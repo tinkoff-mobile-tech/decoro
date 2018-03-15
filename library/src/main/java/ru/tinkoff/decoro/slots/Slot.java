@@ -256,6 +256,9 @@ public final class Slot implements Serializable, Parcelable {
 
         if (!slot.hardcoded()) {
             result = slot.getValue();
+            if (result != null && !validate(result)) {
+                return null;
+            }
             slot.removeCurrentValue();
         } else if (slot.getNextSlot() != null) {
             result = pullValueFromSlot(slot.getNextSlot());

@@ -18,6 +18,8 @@ package ru.tinkoff.decoro;
 
 import android.os.Parcel;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -90,6 +92,54 @@ public class SlotTest {
         a0.setNextSlot(a);
         assertEquals(1, a0.setValue('a'));
         assertEquals(3, a0.setValue(' '));
+    }
+
+    @Test
+    public void invalidValueNotCopiedFromNext() {
+        Slot first = new Slot('0', new SlotValidators.DigitValidator());
+        Slot second = new Slot('a', new SlotValidators.LetterValidator());
+        first.setNextSlot(second);
+        second.setPrevSlot(first);
+
+        first.setValue(null);
+
+        Assert.assertNull(first.getValue());
+    }
+
+    @Test
+    public void invalidValueNotRemovedFromNext() {
+        Slot first = new Slot('0', new SlotValidators.DigitValidator());
+        Slot second = new Slot('a', new SlotValidators.LetterValidator());
+        first.setNextSlot(second);
+        second.setPrevSlot(first);
+
+        first.setValue(null);
+
+        Assert.assertEquals(new Character('a'), second.getValue());
+    }
+
+    @Test
+    public void validValueCopiedFromNext() {
+        Slot first = new Slot('1', new SlotValidators.DigitValidator());
+        Slot second = new Slot('2', new SlotValidators.DigitValidator());
+        first.setNextSlot(second);
+        second.setPrevSlot(first);
+
+        first.setValue(null);
+
+        Assert.assertEquals(new Character('2'), first.getValue());
+    }
+
+    @Test
+    public void validValueRemovedFromNext() {
+        Slot first = new Slot('1', new SlotValidators.DigitValidator());
+        Slot second = new Slot('2', new SlotValidators.DigitValidator());
+        first.setNextSlot(second);
+        second.setPrevSlot(first);
+
+        first.setValue(null);
+
+        Assert.assertNull(second.getValue());
     }
 
 }
