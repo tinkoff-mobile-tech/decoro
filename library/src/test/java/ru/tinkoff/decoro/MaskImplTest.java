@@ -19,8 +19,7 @@ package ru.tinkoff.decoro;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import org.junit.runners.JUnit4;
 
 import ru.tinkoff.decoro.parser.PhoneNumberUnderscoreSlotsParser;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
@@ -35,8 +34,7 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author Mikhail Artemev
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
+@RunWith(JUnit4.class)
 public class MaskImplTest {
 
     Mask mask;
