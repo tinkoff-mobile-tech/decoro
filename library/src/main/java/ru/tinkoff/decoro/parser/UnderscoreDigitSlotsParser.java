@@ -17,8 +17,8 @@
 package ru.tinkoff.decoro.parser;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
+import ru.tinkoff.decoro.TextUtils;
 import ru.tinkoff.decoro.slots.PredefinedSlots;
 import ru.tinkoff.decoro.slots.Slot;
 
