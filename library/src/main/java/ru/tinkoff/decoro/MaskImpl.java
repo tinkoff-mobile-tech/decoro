@@ -554,11 +554,13 @@ public class MaskImpl implements Mask {
         // show hardcoded tail only is this tail is hardcode head and hideHardcodedHead is on
         showHardcodedTail = tmpPosition <= 0 && !hideHardcodedHead;
 
-        // we need move cursor to one step behind in case when we start delete from hardcoded symbol
-        if (tmpPosition >= 0 && slots.checkIsIndex(position) && slots.getSlot(position).hardcoded() && count == 1) {
-            cursorPosition = tmpPosition;
-        } else if (tmpPosition > 0) {
-            cursorPosition = tmpPosition + 1;
+        if (tmpPosition > 0) {
+            // we need move cursor to one step behind in case when we start delete from hardcoded symbol
+            if (slots.checkIsIndex(position) && slots.getSlot(position).hardcoded() && count == 1) {
+                cursorPosition = tmpPosition;
+            } else {
+                cursorPosition = tmpPosition + 1;
+            }
         }
 
         return (cursorPosition >= 0 && cursorPosition <= slots.size()) ? cursorPosition : 0;
