@@ -1,6 +1,6 @@
 package ru.tinkoff.decoro.watchers;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import ru.tinkoff.decoro.Mask;
 import ru.tinkoff.decoro.MaskImpl;

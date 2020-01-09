@@ -1,6 +1,6 @@
 package ru.tinkoff.decoro;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class TextUtils {
     public static boolean isEmpty(@Nullable CharSequence str) {

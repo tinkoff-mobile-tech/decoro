@@ -17,8 +17,8 @@
 package ru.tinkoff.decoro;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import ru.tinkoff.decoro.slots.Slot;
 
