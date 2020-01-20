@@ -30,7 +30,6 @@ tasks.withType(Javadoc) {
 
 dependencies {
     compileOnly "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
-    compileOnly "com.google.android.material:material:$rootProject.materialVersion"
 
     testImplementation "junit:junit:$rootProject.jUnitVersion"
     testImplementation "org.robolectric:robolectric:$rootProject.robolectricVersion"
