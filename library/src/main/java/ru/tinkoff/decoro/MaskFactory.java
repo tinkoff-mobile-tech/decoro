@@ -16,7 +16,7 @@
 
 package ru.tinkoff.decoro;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * @author Mikhail Artemev

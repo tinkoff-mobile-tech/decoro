@@ -2,10 +2,11 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.4.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -14,6 +15,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }
@@ -23,11 +25,11 @@ task clean(type: Delete) {
 }
 
 ext {
-    minSdk = 10
-    targetSdk = 25
+    minSdk = 14
+    targetSdk = 28
 
-    buildToolsVersion = '25.0.2'
-    supportVersion = '25.0.1'
+    appCompatVersion = '1.1.0'
+    materialVersion = '1.0.0'
     jUnitVersion = '4.12'
     robolectricVersion = '3.1.2'
 }
