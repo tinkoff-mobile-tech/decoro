@@ -64,7 +64,7 @@ class UnmodifiableMask implements Mask {
     @Override
     public void clear() {
         if (delegate != null) {
-            clear();
+            delegate.clear();
         }
     }
 
