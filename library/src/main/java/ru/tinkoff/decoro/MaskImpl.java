@@ -248,7 +248,7 @@ public class MaskImpl implements Mask {
             // if there were any non-hardcoded slots skipped while looking for next slot offset
             // and we don't allow 'spots' in the input - we should stop inserting right now
             if (!showingEmptySlots && slotForInputIndex.nonHarcodedSlotSkipped) {
-                break;
+                continue;
             }
 
             cursorPosition += slotForInputIndex.indexOffset;
