@@ -246,7 +246,7 @@ public class MaskImpl implements Mask {
             final SlotIndexOffset slotForInputIndex = validSlotIndexOffset(slotCandidate, newValue);
 
             // if there were any non-hardcoded slots skipped while looking for next slot offset
-            // and we don't allow 'spots' in the input - we should stop inserting right now
+            // and we don't allow 'spots' in the input - we should skip newValue
             if (!showingEmptySlots && slotForInputIndex.nonHarcodedSlotSkipped) {
                 continue;
             }

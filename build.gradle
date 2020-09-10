@@ -28,7 +28,7 @@ ext {
     minSdk = 14
     targetSdk = 28
 
-    appCompatVersion = '1.1.0'
+    appCompatVersion = '1.2.0'
     materialVersion = '1.1.0'
     jUnitVersion = '4.12'
     robolectricVersion = '3.1.2'
