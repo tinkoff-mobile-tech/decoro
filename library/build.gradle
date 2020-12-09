@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdk
         targetSdkVersion rootProject.targetSdk
-        versionCode project.properties['VERSION_CODE'].toInteger()
-        versionName project.properties['VERSION_NAME']
+        versionCode VERSION_CODE.toInteger()
+        versionName versionName
     }
     buildTypes {
         release {
