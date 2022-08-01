@@ -10,16 +10,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name="ru.tinkoff.decoro.demo.MainActivity">
+        <activity
+            android:name="ru.tinkoff.decoro.demo.MainActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="ru.tinkoff.decoro.demo.CustomMaskActivity"/>
+        <activity android:name="ru.tinkoff.decoro.demo.CustomMaskActivity" />
 
-        <activity android:name="ru.tinkoff.decoro.demo.StaticMaskActivity"/>
+        <activity android:name="ru.tinkoff.decoro.demo.StaticMaskActivity" />
 
         <activity android:name="ru.tinkoff.decoro.demo.SlotBehaviourActivity"/>
 
