@@ -7,7 +7,7 @@ if(new File(customGradleScript).exists()){
 }
 
 android {
-    compileSdkVersion rootProject.targetSdk
+    compileSdkVersion rootProject.compileSdk
 
     defaultConfig {
         minSdkVersion rootProject.minSdk
