@@ -1,0 +1,14 @@
+ext {
+    compileSdkVersion = 33
+    targetSdkVersion = 33
+    minSdkVersion = 14
+
+    // android libs
+    appCompatVersion = '1.6.1'
+    materialVersion = '1.9.0'
+    androidPluginVersion = '7.4.2'
+
+    // testing automation libs
+    jUnitVersion = '4.13.2'
+    robolectricVersion = '4.9.2'
+}

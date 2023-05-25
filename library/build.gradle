@@ -7,15 +7,16 @@ if(new File(customGradleScript).exists()){
 }
 
 android {
-    compileSdkVersion rootProject.compileSdk
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion rootProject.minSdk
-        targetSdkVersion rootProject.targetSdk
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode project.properties['VERSION_CODE'].toInteger()
         versionName project.properties['VERSION_NAME']
         setProperty("archivesBaseName", "decoro-${defaultConfig.versionName}")
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -30,8 +31,8 @@ tasks.withType(Javadoc) {
 }
 
 dependencies {
-    compileOnly "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
+    compileOnly "androidx.appcompat:appcompat:$appCompatVersion"
 
-    testImplementation "junit:junit:$rootProject.jUnitVersion"
-    testImplementation "org.robolectric:robolectric:$rootProject.robolectricVersion"
+    testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
 }

@@ -1,12 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
+    apply from: 'gradle/versions.gradle'
+
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath "com.android.tools.build:gradle:$androidPluginVersion"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -16,21 +18,10 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    minSdk = 14
-    targetSdk = 33
-    compileSdk = 33
-
-    appCompatVersion = '1.6.1'
-    materialVersion = '1.9.0'
-    jUnitVersion = '4.13.2'
-    robolectricVersion = '4.8.1'
 }
