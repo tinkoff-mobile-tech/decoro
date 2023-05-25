@@ -26,7 +26,7 @@ import ru.tinkoff.decoro.slots.Slot;
  * Interface representing a Mask that holds slots with user input and hardcoded data.
  * The mask performs actual formatting of the input and able to return formatted and unformatted
  * string.
- * <br/><br/>
+ * <br><br>
  * See: {@link MaskImpl} - the main implementation of this interface.
  *
  * @author Mikhail Artemev
@@ -121,7 +121,7 @@ public interface Mask extends Iterable<Slot>, Parcelable {
     int removeBackwardsWithoutHardcoded(int position, int count);
 
     /**
-     * Returns current size of a mask in slots. <br/>
+     * Returns current size of a mask in slots. <br>
      * <b>IMPORTANT:</b> empty slots are also counted.
      *
      * @return returns current size of a mask in slots
@@ -131,7 +131,7 @@ public interface Mask extends Iterable<Slot>, Parcelable {
     /**
      * @return true if mask allows to display slots with no value, putting <b>placeholder</b>
      * on those positions.
-     * <br/><br/>
+     * <br><br>
      * See: {@link #setPlaceholder(Character)}
      */
     boolean isShowingEmptySlots();
@@ -139,7 +139,7 @@ public interface Mask extends Iterable<Slot>, Parcelable {
     /**
      * Defines whether mask allows to display slots with no value, putting <b>placeholder</b>
      * on those positions.
-     * <br/><br/>
+     * <br><br>
      * See: {@link #setPlaceholder(Character)}
      *
      * @param showingEmptySlots true if mask allows empty slots to be displayed
@@ -147,18 +147,18 @@ public interface Mask extends Iterable<Slot>, Parcelable {
     void setShowingEmptySlots(boolean showingEmptySlots);
 
     /**
-     * @return character that will be put on empty position when calling {@link #toString()} or
+     * @return character that will be put on empty position when calling {@code toString()} or
      * {@link #toUnformattedString()}.
-     * <br/><br/>
+     * <br><br>
      * See: {@link #setShowingEmptySlots(boolean)}
      */
     @NonNull
     Character getPlaceholder();
 
     /**
-     * Sets character that will be put on empty position when calling {@link #toString()} or
+     * Sets character that will be put on empty position when calling {@code toString()} or
      * {@link #toUnformattedString()}. Placeholder should not be null!
-     * <br/><br/>
+     * <br><br>
      * See: {@link #setShowingEmptySlots(boolean)}
      *
      * @param placeholder character that represents empty slots
@@ -167,15 +167,15 @@ public interface Mask extends Iterable<Slot>, Parcelable {
 
     /**
      * @return true if mask will hide leading hardcoded sequence of its contents.
-     * <br/><br/>
+     * <br><br>
      * See: {@link #setHideHardcodedHead(boolean)}
      */
     boolean isHideHardcodedHead();
 
     /**
-     * Defines whether mask should hide leading hardcoded sequence when calling {@link #toString()}
+     * Defines whether mask should hide leading hardcoded sequence when calling {@code toString()}
      * or {@link #toUnformattedString()}.
-     * <br/><br/>
+     * <br><br>
      * Example of "hardcoded head" is <b>+7 (</b> in the russian cellphone number mask defined in
      * {@link
      * ru.tinkoff.decoro.slots.PredefinedSlots#RUS_PHONE_NUMBER}.
@@ -187,7 +187,7 @@ public interface Mask extends Iterable<Slot>, Parcelable {
     /**
      * @return true if mask won't allow to perform further input if all the slots are already filled
      * out.
-     * <br/><br/>
+     * <br><br>
      * See: {@link #setForbidInputWhenFilled(boolean)}
      */
     boolean isForbidInputWhenFilled();
@@ -196,7 +196,7 @@ public interface Mask extends Iterable<Slot>, Parcelable {
      * Defines whether mask won't allow to perform further input if all the slots are already
      * filled out. If <b>false</b> passed - mask will shift existing input when trying to insert
      * text inside filled out mask ({@link #filled()} returns true).
-     * <br/><br/>
+     * <br><br>
      * WARNING: This flag only makes sense for terminated masks.
      *
      * @param forbidInputWhenFilled flag that forbids overwriting terminated filled out masks.
@@ -208,7 +208,7 @@ public interface Mask extends Iterable<Slot>, Parcelable {
      * in a formatted string.
      * @param cursorPosition
      * @return corresponding cursor position in unformatted string
-     * @throws IndexOutOfBoundsException if cursorPosition < 0 or cursorPosition > size
+     * @throws IndexOutOfBoundsException if cursorPosition &lt; 0 or cursorPosition &gt; size
      */
     int findCursorPositionInUnformattedString(int cursorPosition);
 }

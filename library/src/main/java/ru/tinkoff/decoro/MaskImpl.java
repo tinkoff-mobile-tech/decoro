@@ -89,7 +89,7 @@ public class MaskImpl implements Mask {
      * Returns text without decoration characters. Method works with respect to all the
      * mask parameters. Just as {@link #toString()} does;
      * <p>
-     * <br/><br/> <em>Example</em>: assume that filled mask contains "+7 999
+     * <br><br> <em>Example</em>: assume that filled mask contains "+7 999
      * 111-22-33" where spaces and dashes are decoration slots. Then this
      * method will return "+79991112233".
      *
