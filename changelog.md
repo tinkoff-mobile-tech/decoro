@@ -2,7 +2,7 @@
 
 #### Fixed
 #### Changes
-- updated targetSdkVersion to 33, deps versions
+- bump up targetSdkVersion, compileSdkVersion 31 -> 33, update dependencies versions
 #### Additions
 
 ## 1.5.1
