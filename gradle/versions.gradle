@@ -3,6 +3,9 @@ ext {
     targetSdkVersion = 33
     minSdkVersion = 14
 
+    decoroVersionCode = VERSION_CODE.toInteger()
+    decoroVersionName = VERSION_NAME
+
     // android libs
     appCompatVersion = '1.6.1'
     materialVersion = '1.9.0'
