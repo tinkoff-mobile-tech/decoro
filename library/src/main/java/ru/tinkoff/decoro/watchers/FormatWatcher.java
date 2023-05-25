@@ -69,7 +69,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
     }
 
     /**
-     * Starts to follow text changes in the specified {@link TextView} to format any input. <br/>
+     * Starts to follow text changes in the specified {@link TextView} to format any input. <br>
      * IMPORTANT: this call will force watcher to re-create the mask
      *
      * @param textView text view to watch and format
@@ -80,7 +80,7 @@ public abstract class FormatWatcher implements TextWatcher, MaskFactory {
 
     /**
      * Starts to follow text changes in the specified {@link TextView} to format any input.
-     * Initial mask's value (e.g. hardcoded head) will be displayed in the view.<br/>
+     * Initial mask's value (e.g. hardcoded head) will be displayed in the view.<br>
      * IMPORTANT: this call will force watcher to re-create the mask
      *
      * @param textView text view to watch and format
